@@ -1,4 +1,4 @@
-import Instructions from '@/components/dom/Instructions'
+import Navbar from '@/components/dom/Navbar'
 import dynamic from 'next/dynamic'
 
 const Box = dynamic(() => import('@/components/canvas/Box'), {
@@ -9,7 +9,7 @@ const Box = dynamic(() => import('@/components/canvas/Box'), {
 const Page = (props) => {
   return (
     <>
-      <Instructions />
+      <Navbar />
     </>
   )
 }
