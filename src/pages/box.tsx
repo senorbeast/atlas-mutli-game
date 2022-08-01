@@ -1,4 +1,3 @@
-import Navbar from '@/components/dom/Navbar'
 import dynamic from 'next/dynamic'
 
 const Box = dynamic(() => import('@/components/canvas/Box'), {
@@ -7,11 +6,7 @@ const Box = dynamic(() => import('@/components/canvas/Box'), {
 
 // Step 5 - delete Instructions components
 const Page = (props) => {
-  return (
-    <>
-      <Navbar />
-    </>
-  )
+  return <></>
 }
 
 Page.r3f = (props) => (

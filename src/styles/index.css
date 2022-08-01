@@ -43,7 +43,7 @@
   /* Common theme color pattern */
 
   .standard-color {
-    @apply bg-white text-black dark:bg-slate-800 dark:text-white;
+    @apply bg-white text-black dark:bg-slate-900 dark:text-white;
   }
 
   .standard-border {
