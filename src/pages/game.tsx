@@ -1,19 +1,18 @@
 import dynamic from 'next/dynamic'
-
+import GamePage from '@/components/dom/GamePage'
 const Box = dynamic(() => import('@/components/canvas/Box'), {
   ssr: false,
 })
 
-// Step 5 - delete Instructions components
 const Page = (props) => {
-  return <></>
+  return (
+    <>
+      <GamePage />
+    </>
+  )
 }
 
-Page.r3f = (props) => (
-  <>
-    <Box route='/' />
-  </>
-)
+Page.r3f = (props) => <>{/* <Box route='/' /> */}</>
 
 export default Page
 
