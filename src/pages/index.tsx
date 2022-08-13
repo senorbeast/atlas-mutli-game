@@ -1,6 +1,5 @@
 import dynamic from 'next/dynamic'
-import Navbar from '@/components/dom/Navbar'
-import MainPage from '@/components/dom/MainPage/MainPage'
+import MainPage from '@/components/dom/MainPage'
 
 const Shader = dynamic(() => import('@/components/canvas/Shader/Shader'), {
   ssr: false,
