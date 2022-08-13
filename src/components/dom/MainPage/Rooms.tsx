@@ -1,4 +1,4 @@
-import useStore, { setState } from '@/helpers/store'
+import useStore from '@/helpers/store'
 import { LockClosedIcon } from '@heroicons/react/solid'
 import { useState } from 'react'
 
@@ -16,20 +16,6 @@ const roomsList: room[] = [
     name: 'Huehu',
     players: 4,
     mode: 'Countries Only',
-    locked: true,
-  },
-  {
-    id: '',
-    name: 'tui',
-    players: 4,
-    mode: 'Cities Only',
-    locked: true,
-  },
-  {
-    id: '',
-    name: 'phewww',
-    players: 4,
-    mode: 'All',
     locked: true,
   },
   {

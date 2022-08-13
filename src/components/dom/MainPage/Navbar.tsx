@@ -1,16 +1,17 @@
 import Image from 'next/image'
-import { BeakerIcon } from '@heroicons/react/solid'
+import { HomeIcon, InformationCircleIcon } from '@heroicons/react/solid'
+import DarkToggle from './DarkToggle'
 
 const navLinks = [
   {
     name: 'Home',
-    href: '/',
-    icon: <BeakerIcon height={25} />,
+    href: '/home',
+    icon: <HomeIcon height={25} />,
   },
   {
     name: 'About',
-    href: '/',
-    icon: <BeakerIcon height={25} />,
+    href: '/about',
+    icon: <InformationCircleIcon height={25} />,
   },
 ]
 
@@ -45,36 +46,7 @@ const NavBar = () => {
             Atlas
           </span>
         </a>
-        {/* Get Started, Toggle Menu Container  */}
-        <div className='flex md:order-2'>
-          {/* Get Started Button */}
-          <button type='button' className=' font-medium text-center button'>
-            Get started
-          </button>
-          {/* Toggle Menu */}
-          <button
-            data-collapse-toggle='navbar-cta'
-            type='button'
-            className='inline-flex items-center p-2 text-sm text-gray-500 rounded-lg md:hidden'
-            aria-controls='navbar-cta'
-            aria-expanded='false'
-          >
-            <span className='sr-only'>Open main menu</span>
-            <svg
-              className='w-6 h-6'
-              aria-hidden='true'
-              fill='currentColor'
-              viewBox='0 0 20 20'
-              xmlns='http://www.w3.org/2000/svg'
-            >
-              <path
-                fillRule='evenodd'
-                d='M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z'
-                clipRule='evenodd'
-              ></path>
-            </svg>
-          </button>
-        </div>
+
         {/* Links Container */}
         <div
           className='items-center justify-between hidden w-full md:flex md:w-auto md:order-1'
@@ -85,6 +57,14 @@ const NavBar = () => {
               <NavLink key={name} name={name} href={href} icon={icon} />
             ))}
           </ul>
+        </div>
+        {/* Get Started, Toggle Menu Container  */}
+        <div className='flex items-center justify-center md:order-2 gap-5'>
+          <DarkToggle />
+          {/* Get Started Button */}
+          <button type='button' className=' font-medium text-center button'>
+            Get started
+          </button>
         </div>
       </nav>
     </div>

@@ -4,7 +4,7 @@ import Rooms from './Rooms'
 const MainPage = () => {
   return (
     <>
-      <div className='w-full h-full bg-black'>
+      <div className='w-full h-full standard-color'>
         <NavBar />
         <Rooms />
       </div>

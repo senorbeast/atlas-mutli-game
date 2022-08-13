@@ -1,3 +1,4 @@
+import useStore from '@/helpers/store'
 import { useState } from 'react'
 
 interface player {
@@ -41,9 +42,13 @@ const Player = ({ ...props }: player) => {
 }
 
 const GamePage = () => {
+  const setRoute = useStore((state) => state.setRoute)
   return (
     <>
       <div className='flex flex-col border border-green-900 justify-evenly'>
+        <button type='button' onClick={() => setRoute('/')} className=''>
+          Back
+        </button>
         {playerList.map((player) => (
           <Player key={player.id} {...player} />
         ))}
