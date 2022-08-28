@@ -2,79 +2,25 @@ import { immer } from 'zustand/middleware/immer'
 import create, { StateCreator, UseBoundStore } from 'zustand'
 // import { shallow } from 'zustand/shallow'
 
-interface Routes {
-  router: string[] | null
-  setRoute: (newRoute: string) => void
-  dom: any
-}
+import { createRouteSlice, RouteSlice } from './RouteSlice'
+import { createRoomSlice, RoomSlice } from './RoomSlice'
+import { createViewSlice, ViewSlice } from './ViewSlice'
+import { createGameSlice, GameSlice } from './GameSlice'
+import { createISocketContextSlice, SocketSlice } from './SocketSlice'
 
-const createRouteSlice: StateCreator<
-  Routes,
-  [['zustand/immer', never]],
-  [],
-  Routes
-> = (set) => ({
-  router: null,
-  setRoute: (newRoute) =>
-    set((state) => ({ router: state.router.push(newRoute) })),
-  dom: null,
-})
+export type MyState = RouteSlice &
+  RoomSlice &
+  GameSlice &
+  ViewSlice &
+  SocketSlice
 
-interface RoomSlice {
-  rooms: number[]
-  addRoom: (newRoom: number) => void
-}
-const createRoomSlice: StateCreator<
-  RoomSlice & GameSlice & ViewSlice,
-  [['zustand/immer', never]],
-  [],
-  RoomSlice
-> = (set) => ({
-  rooms: [0],
-  addRoom: (newRoom) =>
-    set((state) => ({ rooms: state.rooms.concat(newRoom) })),
-})
-
-interface GameSlice {
-  id: number
-  name: string
-  players: number
-  addPlayer: () => void
-}
-const createGameSlice: StateCreator<
-  RoomSlice & GameSlice & ViewSlice,
-  [['zustand/immer', never]],
-  [],
-  GameSlice
-> = (set) => ({
-  id: 0,
-  name: 'Game',
-  players: 4,
-  addPlayer: () => set((state) => ({ players: state.players + 1 })),
-})
-
-interface ViewSlice {
-  darkMode: boolean
-  toggleMode: () => void
-}
-
-const createViewSlice: StateCreator<
-  RoomSlice & GameSlice & ViewSlice,
-  [['zustand/immer', never]],
-  [],
-  ViewSlice
-> = (set) => ({
-  darkMode: true,
-  toggleMode: () =>
-    set((state) => ({ darkMode: state.darkMode ? false : true })),
-})
-
-const useStoreImpl = create<Routes & RoomSlice & GameSlice & ViewSlice>()(
+const useStoreImpl = create<MyState>()(
   immer((...a) => ({
+    ...createRouteSlice(...a),
     ...createRoomSlice(...a),
     ...createGameSlice(...a),
     ...createViewSlice(...a),
-    ...createRouteSlice(...a),
+    ...createISocketContextSlice(...a),
   }))
 )
 
