@@ -7,19 +7,25 @@ const Box = dynamic(() => import('@/components/canvas/Box'), {
 const Page = (props) => {
   return (
     <>
-      <GamePage />
+      <div className='flex w-screen h-screen p-2'>
+        <GamePage />
+      </div>
     </>
   )
 }
 
-Page.r3f = (props) => <>{/* <Box route='/' /> */}</>
+Page.r3f = (props) => (
+  <>
+    <Box route='/' />
+  </>
+)
 
 export default Page
 
 export async function getStaticProps() {
   return {
     props: {
-      title: 'Box',
+      title: 'Lets Play',
     },
   }
 }
