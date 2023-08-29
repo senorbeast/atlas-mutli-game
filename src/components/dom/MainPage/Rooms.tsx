@@ -92,13 +92,16 @@ const Rooms = () => {
   })
   return (
     <>
-      <div className='flex items-center justify-center m-5'>
+      <div className='flex items-center justify-center m-5 gap-10'>
         <input
           placeholder='Search rooms...'
           value={search}
-          className='flex h-10 px-6 input'
+          className='flex h-10 px-6 py-6 input'
           onChange={(e) => setSearch(e.target.value)}
         ></input>
+        <button type='button' className='px-5 button' onClick={() => {}}>
+          Create New Room
+        </button>
       </div>
       <div className='flex flex-wrap justify-center w-auto m-5 mt-8 gap-5 rounded-3xl'>
         {filteredList.map((props) => {

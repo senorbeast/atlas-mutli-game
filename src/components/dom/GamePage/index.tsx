@@ -1,10 +1,11 @@
 import useStore from '@/helpers/store'
 import Chat from './Chat'
 import SettingsBar from './SettingsBar'
+import { Player } from './Player'
 
 // Identify player individually
 
-interface player {
+export interface player {
   id: number
   name: string
   active: boolean
@@ -20,94 +21,47 @@ const playerList: player[] = [
   },
   {
     id: 2,
-    name: 'Player 1',
+    name: 'Player 2',
     active: false,
     hearts: 1,
   },
   {
     id: 3,
-    name: 'Player 1',
+    name: 'Player 3',
     active: false,
     hearts: 1,
   },
   {
     id: 4,
-    name: 'Player 1',
+    name: 'Player 4',
     active: false,
     hearts: 1,
   },
   {
     id: 5,
-    name: 'Player 1',
+    name: 'Player 5',
     active: false,
     hearts: 1,
   },
   {
     id: 6,
-    name: 'Player 1',
+    name: 'Player 6',
     active: true,
     hearts: 1,
   },
   {
     id: 7,
-    name: 'Player 1',
+    name: 'Player 7',
     active: false,
     hearts: 1,
   },
   {
     id: 8,
-    name: 'Player 1',
+    name: 'Player 8',
     active: false,
     hearts: 1,
   },
 ]
-
-interface ActivePlayerHighlight {
-  active: boolean
-  name: string
-}
-
-const ActivePlayerHighlight = (props: ActivePlayerHighlight) => {
-  return (
-    <>
-      {props.active ? (
-        <div className='p-2 rounded-full bg-amber-300 bg-opacity-50'>
-          <div className='p-2 rounded-full bg-amber-300 bg-opacity-50'>
-            <div className='p-2 rounded-full bg-amber-300 bg-opacity-50'>
-              <div className='flex items-center justify-center p-4 bg-purple-600 rounded-full w-28 h-28'>
-                <div className='font-bold text-gray-50 text-7xl'>
-                  {props.name[0]}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      ) : (
-        // Display Unhighlighted
-        <div className='p-6'>
-          <div className='flex items-center justify-center p-4 bg-purple-600 rounded-full w-28 h-28'>
-            <div className='font-bold text-gray-50 text-7xl'>
-              {props.name[0]}
-            </div>
-          </div>
-        </div>
-      )}
-    </>
-  )
-}
-
-const Player = ({ ...props }: player) => {
-  return (
-    <div className='flex h-full even:place-self-end odd:place-self-start'>
-      {/* <div className='flex h-full bg-green-400 rounded-3xl even:bg-red-500 even:place-self-end odd:bg-blue-500 odd:place-self-start'> */}
-      <div className='flex flex-col items-center justify-start gap-2'>
-        {/* Highlight Active Player */}
-        <ActivePlayerHighlight name={props.name} active={props.active} />
-        <span className='flex font-bold text-black'>{props.name}</span>
-      </div>
-    </div>
-  )
-}
 
 const GamePage = () => {
   const setRoute = useStore((state) => state.setRoute)
