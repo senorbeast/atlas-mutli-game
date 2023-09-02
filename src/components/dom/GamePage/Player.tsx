@@ -68,6 +68,7 @@ const HeartArray = ({ numHearts, radius }: { numHearts: number; radius: number }
 
 export const Player = ({ id, name, active, hearts }: player) => {
   return (
+    //  To enable pointer-events for players, add pointer-events-auto to className
     <div className='flex h-full even:place-self-end odd:place-self-start'>
       {/* <div className='flex h-full bg-green-400 rounded-3xl even:bg-red-500 even:place-self-end odd:bg-blue-500 odd:place-self-start'> */}
       <div className='flex flex-col items-center justify-start gap-2'>

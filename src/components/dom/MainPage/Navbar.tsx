@@ -17,7 +17,7 @@ const navLinks = [
 
 const NavLink = ({ name, href, icon }) => {
   return (
-    <li className='px-5 py-3'>
+    <li className='px-5 py-3 '>
       <a
         href={href}
         className='flex items-center justify-between text-base rounded gap-2 standard-color md:bg-transparent'
@@ -31,27 +31,16 @@ const NavLink = ({ name, href, icon }) => {
 
 const NavBar = () => {
   return (
-    <div className='pt-4'>
+    <div className='pt-4 pointer-events-auto'>
       <nav className='container flex flex-wrap items-center justify-around h-16 mx-auto rounded-full card standard-color standard-border'>
         {/* Logo */}
         <a href='' className='flex items-center gap-4'>
-          <Image
-            src='/img/logo.svg'
-            height={30}
-            width={30}
-            className='flex h-6 mr-3 sm:h-9'
-            alt='Atlas Logo'
-          />
-          <span className='flex text-xl font-semibold whitespace-nowrap standard-color'>
-            Atlas
-          </span>
+          <Image src='/img/logo.svg' height={30} width={30} className='flex h-6 mr-3 sm:h-9' alt='Atlas Logo' />
+          <span className='flex text-xl font-semibold whitespace-nowrap standard-color'>Atlas</span>
         </a>
 
         {/* Links Container */}
-        <div
-          className='items-center justify-between hidden w-full md:flex md:w-auto md:order-1'
-          id='navbar-cta'
-        >
+        <div className='items-center justify-between hidden w-full md:flex md:w-auto md:order-1' id='navbar-cta'>
           <ul className='flex flex-col gap-2 md:flex-row md:text-sm md:font-medium md:border-0 md:bg-white standard-color'>
             {navLinks.map(({ name, href, icon }) => (
               <NavLink key={name} name={name} href={href} icon={icon} />

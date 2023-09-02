@@ -44,9 +44,7 @@ const Room = ({ id, name, players, mode, locked }) => {
         <span className='text-2xl font-extrabold text-left'>{name}</span>
       </div>
       <div className='w-full px-5'>
-        <span className='text-sm font-light text-left'>
-          Players:&nbsp;&nbsp;
-        </span>
+        <span className='text-sm font-light text-left'>Players:&nbsp;&nbsp;</span>
         <span className='text-base font-bold text-left'>{players}</span>
       </div>
       <div className='px-3 rounded-full secondary-color'>
@@ -64,9 +62,7 @@ const Room = ({ id, name, players, mode, locked }) => {
         <button
           type='button'
           className='w-10/12 py-3 button'
-          onClick={() =>
-            locked ? togglePassBox() : router.push('/game')
-          } /** Link to GamePage */
+          onClick={() => (locked ? togglePassBox() : router.push('/game'))} /** Link to GamePage */
         >
           Join
         </button>

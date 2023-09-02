@@ -72,7 +72,7 @@ const GamePage = () => {
         ))}
       </div>
       {/* Chat Section */}
-      <div className='absolute bottom-0 z-20 block left-3/4'>
+      <div className='absolute bottom-0 z-20 block pointer-events-auto left-3/4'>
         <Chat />
       </div>
       {/* Settings Section */}

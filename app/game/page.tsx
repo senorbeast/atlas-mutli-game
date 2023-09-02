@@ -25,7 +25,7 @@ export default function Page() {
   return (
     <>
       <div className='relative flex w-screen h-screen'>
-        <div className='absolute z-10 flex w-screen h-screen'>
+        <div className='absolute z-10 flex w-screen h-screen pointer-events-none'>
           <GamePage />
         </div>
         <View className='absolute top-0 z-0 flex flex-col items-center justify-center w-full h-screen'>

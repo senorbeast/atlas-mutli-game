@@ -117,10 +117,10 @@
   }
 
   .button {
-    @apply border px-5 py-3 text-base border-gray-400 rounded-full bg-white font-semibold text-gray-800 shadow hover:bg-gray-100 dark:bg-slate-800 dark:text-white hover:dark:bg-slate-900;
+    @apply border pointer-events-auto px-5 py-3 text-base border-gray-400 rounded-full bg-white font-semibold text-gray-800 shadow hover:bg-gray-100 dark:bg-slate-800 dark:text-white hover:dark:bg-slate-900;
   }
   .input {
-    @apply border px-5 py-3 text-base border-gray-400 rounded-full bg-white font-semibold text-gray-800 shadow hover:bg-gray-100 dark:bg-slate-800 dark:text-white hover:dark:bg-slate-900;
+    @apply border pointer-events-auto px-5 py-3 text-base border-gray-400 rounded-full bg-white font-semibold text-gray-800 shadow hover:bg-gray-100 dark:bg-slate-800 dark:text-white hover:dark:bg-slate-900;
   }
 
   .n-container {
