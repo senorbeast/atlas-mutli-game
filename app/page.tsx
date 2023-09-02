@@ -5,8 +5,6 @@ import dynamic from 'next/dynamic'
 import { Suspense } from 'react'
 
 const Logo = dynamic(() => import('@/components/canvas/Examples').then((mod) => mod.Logo), { ssr: false })
-const Dog = dynamic(() => import('@/components/canvas/Examples').then((mod) => mod.Dog), { ssr: false })
-const Duck = dynamic(() => import('@/components/canvas/Examples').then((mod) => mod.Duck), { ssr: false })
 const View = dynamic(() => import('@/components/canvas/View').then((mod) => mod.View), {
   ssr: false,
   loading: () => (
@@ -34,7 +32,7 @@ export default function Page() {
         <div className='w-full text-center md:w-3/5'>
           <View className='flex flex-col items-center justify-center w-full h-96'>
             <Suspense fallback={null}>
-              <Logo route='/blob' scale={0.6} position={[0, 0, 0]} />
+              <Logo route='/game' scale={0.6} position={[0, 0, 0]} />
               <Common />
             </Suspense>
           </View>
