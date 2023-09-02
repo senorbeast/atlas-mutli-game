@@ -3,6 +3,7 @@
     "baseUrl": ".",
     "paths": {
       "@/*": [
+        "app/*",
         "src/*"
       ]
     },
@@ -23,12 +24,19 @@
     "moduleResolution": "node",
     "isolatedModules": true,
     "jsx": "preserve",
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "strictNullChecks": true
   },
   "include": [
     "next-env.d.ts",
     "**/*.ts",
-    "**/*.tsx"
+    "**/*.tsx",
+    ".next/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"
