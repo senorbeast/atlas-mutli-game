@@ -1,4 +1,3 @@
-import useStore from '@/helpers/store'
 import Chat from './Chat'
 import SettingsBar from './SettingsBar'
 import { Player } from './Player'
@@ -64,7 +63,6 @@ const playerList: player[] = [
 ]
 
 const GamePage = () => {
-  const setRoute = useStore((state) => state.setRoute)
   return (
     <>
       {/* Game Section */}

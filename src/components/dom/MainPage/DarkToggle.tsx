@@ -1,4 +1,4 @@
-import useStore from '@/helpers/store'
+import useStore from '@/store/store'
 import { useSpring, animated } from '@react-spring/web'
 
 const DarkToggle = () => {

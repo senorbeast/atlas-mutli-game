@@ -1,5 +1,6 @@
-import useStore from '@/helpers/store'
+import useStore from '@/store/store'
 import { LockClosedIcon } from '@heroicons/react/solid'
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
 interface room {
@@ -31,7 +32,7 @@ const Room = ({ id, name, players, mode, locked }) => {
   //   console.log(id, name, players, locked)
 
   const [passBox, setPassBox] = useState(false)
-  const router = useStore((s) => s.router)
+  const router = useRouter()
 
   const togglePassBox = () => {
     setPassBox((passBox) => !passBox)
