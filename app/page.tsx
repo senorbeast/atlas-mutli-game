@@ -3,8 +3,9 @@
 import MainPage from '@/components/dom/MainPage'
 import dynamic from 'next/dynamic'
 import { Suspense } from 'react'
-const Blob = dynamic(() => import('@/components/canvas/Examples').then((mod) => mod.Blob), { ssr: false })
-const Logo = dynamic(() => import('@/components/canvas/Examples').then((mod) => mod.Logo), { ssr: false })
+
+const Globe = dynamic(() => import('@/components/canvas/globe').then((mod) => mod.Globe), { ssr: false })
+
 const View = dynamic(() => import('@/components/canvas/View').then((mod) => mod.View), {
   ssr: false,
   loading: () => (
@@ -29,7 +30,7 @@ export default function Page() {
         <div className='absolute top-0 left-0 z-0 w-full h-screen'>
           <View className='absolute top-0 z-0 flex flex-col items-center justify-center w-full h-screen'>
             <Suspense fallback={null}>
-              <Blob route='/game' position={[0, 0, 0]} />
+              <Globe route='/game' position={[0, 0, 0]} scale={0.6} />
               <Common color='' />
             </Suspense>
           </View>
