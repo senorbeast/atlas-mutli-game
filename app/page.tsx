@@ -3,7 +3,7 @@
 import MainPage from '@/components/dom/MainPage'
 import dynamic from 'next/dynamic'
 import { Suspense } from 'react'
-
+const Blob = dynamic(() => import('@/components/canvas/Examples').then((mod) => mod.Blob), { ssr: false })
 const Logo = dynamic(() => import('@/components/canvas/Examples').then((mod) => mod.Logo), { ssr: false })
 const View = dynamic(() => import('@/components/canvas/View').then((mod) => mod.View), {
   ssr: false,
@@ -25,22 +25,19 @@ const Common = dynamic(() => import('@/components/canvas/View').then((mod) => mo
 export default function Page() {
   return (
     <>
-      <div className='flex flex-col flex-wrap items-center w-full mx-auto md:flex-row lg:w-4/5'>
-        {/* jumbo */}
-         <MainPage />
-
-        <div className='w-full text-center md:w-3/5'>
-          <View className='flex flex-col items-center justify-center w-full h-96'>
+      <div className='relative flex flex-col flex-wrap items-center w-full mx-auto md:flex-row'>
+        <div className='absolute top-0 left-0 z-0 w-full h-screen'>
+          <View className='absolute top-0 z-0 flex flex-col items-center justify-center w-full h-screen'>
             <Suspense fallback={null}>
-              <Logo route='/game' scale={0.6} position={[0, 0, 0]} />
-              <Common />
+              <Blob route='/game' position={[0, 0, 0]} />
+              <Common color='' />
             </Suspense>
           </View>
         </div>
-
-        
+        <div className='absolute top-0 left-0 z-10 w-full h-full'>
+          <MainPage />
+        </div>
       </div>
-
     </>
   )
 }

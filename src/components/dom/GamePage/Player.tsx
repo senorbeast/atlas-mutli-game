@@ -28,13 +28,7 @@ const NormalPlayer = ({ name }: { name: string }) => {
   )
 }
 
-const HeartArray = ({
-  numHearts,
-  radius,
-}: {
-  numHearts: number
-  radius: number
-}) => {
+const HeartArray = ({ numHearts, radius }: { numHearts: number; radius: number }) => {
   const heartSpacing = 20 // Adjust this value for the desired spacing between hearts
   const circumference = 2 * Math.PI * radius
   const totalHeartWidth = numHearts * heartSpacing
@@ -80,12 +74,8 @@ export const Player = ({ id, name, active, hearts }: player) => {
         {/* Highlight Active Player */}
         {/* Adjust numHearts and radius as needed */}
         <div>
-          <HeartArray numHearts={8} radius={40} />
-          {active ? (
-            <ActivePlayerHighlight name={name} />
-          ) : (
-            <NormalPlayer name={name} />
-          )}
+          {/* <HeartArray numHearts={8} radius={40} /> */}
+          {active ? <ActivePlayerHighlight name={name} /> : <NormalPlayer name={name} />}
         </div>
         <span className='flex font-bold text-black'>{name}</span>
       </div>

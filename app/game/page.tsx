@@ -24,14 +24,15 @@ const Common = dynamic(() => import('@/components/canvas/View').then((mod) => mo
 export default function Page() {
   return (
     <>
-      <div className='flex w-screen h-screen p-2'>
-        <GamePage />
+      <div className='relative flex w-screen h-screen'>
+        <div className='absolute z-10 flex w-screen h-screen'>
+          <GamePage />
+        </div>
+        <View className='absolute top-0 z-0 flex flex-col items-center justify-center w-full h-screen'>
+          <Blob />
+          <Common color='' />
+        </View>
       </div>
-
-      <View className='absolute top-0 flex flex-col items-center justify-center w-full h-screen'>
-        <Blob />
-        <Common />
-      </View>
     </>
   )
 }
