@@ -21,7 +21,7 @@ const Layout = ({ children }) => {
   const ref = useRef(null)
   const dark = useStore((state) => state.darkMode)
   // useEffect(() => {
-  //   setState(ref:ref);
+  //   setState();
   // }, [])
 
   return (
