@@ -1,6 +1,5 @@
-import { ChatAlt2Icon } from '@heroicons/react/solid'
-import { produceWithPatches } from 'immer'
-import { Dispatch, SetStateAction, useState } from 'react'
+import { ChatBubbleLeftEllipsisIcon } from '@heroicons/react/24/outline'
+import { useState } from 'react'
 
 interface messageType {
   name: string
@@ -63,12 +62,7 @@ const Chat = () => {
   }
   return (
     <>
-      <button
-        type='button'
-        className=''
-        onMouseOver={() => setHover(true)}
-        onMouseOut={() => setHover(false)}
-      >
+      <button type='button' className='' onMouseOver={() => setHover(true)} onMouseOut={() => setHover(false)}>
         <div
           className='relative h-14 rounded-t-2xl primary-color w-80'
           onClick={(e) => {
@@ -85,15 +79,12 @@ const Chat = () => {
               }}
             >
               <span>Username</span>
-              <input
-                autoFocus
-                className='border-0  enabled:hover:border-0 ring-0 primary-color'
-              ></input>
+              <input autoFocus className='border-0  enabled:hover:border-0 ring-0 primary-color'></input>
             </div>
           ) : (
-            <div className='flex items-center justify-center p-3'>
+            <div className='flex items-center justify-center p-3 gap-2'>
               Chat
-              <ChatAlt2Icon height={30} />
+              <ChatBubbleLeftEllipsisIcon height={30} />
             </div>
           )}
         </div>

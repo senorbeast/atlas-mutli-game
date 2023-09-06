@@ -1,6 +1,6 @@
 import Image from 'next/image'
-import { HomeIcon, InformationCircleIcon } from '@heroicons/react/solid'
 import DarkToggle from './DarkToggle'
+import { HomeIcon, InformationCircleIcon } from '@heroicons/react/24/solid'
 
 const navLinks = [
   {

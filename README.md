@@ -8,22 +8,8 @@ This project was bootstrapped with [`create-r3f-app`](https://github.com/utsuboc
 yarn install && yarn dev
 ```
 
-
 #### Update dependencies
 
 ```bash
-npm i -g npm-check-updates
-
-ncu          # Provide info about outdated dependencies 
-ncu -u       # Update dep in package.json
-
-
-yarn install # Install package.json change
-```
-
-or 
-```
-npx npm-check-updates
-npx npm-check-updates -u
-yarn install
+npx npm-check-updates -u --interactive --format group
 ```
