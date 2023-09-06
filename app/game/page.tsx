@@ -3,7 +3,8 @@
 import GamePage from '@/components/dom/GamePage'
 import dynamic from 'next/dynamic'
 
-const Globe = dynamic(() => import('@/components/canvas/globe').then((mod) => mod.Globe), { ssr: false })
+const VGlobe = dynamic(() => import('@/components/canvas/VGlobe').then((mod) => mod.VGlobe), { ssr: false })
+
 const View = dynamic(() => import('@/components/canvas/View').then((mod) => mod.View), {
   ssr: false,
   loading: () => (
@@ -29,7 +30,7 @@ export default function Page() {
           <GamePage />
         </div>
         <View className='absolute top-0 z-0 flex flex-col items-center justify-center w-full h-screen'>
-          <Globe scale={0.8} route='/' />
+          <VGlobe />
           <Common color='' />
         </View>
       </div>
