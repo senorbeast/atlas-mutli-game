@@ -32,7 +32,7 @@ export default function Page() {
             <Suspense fallback={null}>
               {/* <Globe route='/game' position={[0, 0, 0]} scale={0.6} /> */}
               <VGlobe />
-              <Common color='' />
+              <Common />
             </Suspense>
           </View>
         </div>

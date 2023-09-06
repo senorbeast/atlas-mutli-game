@@ -31,7 +31,7 @@ export default function Page() {
         </div>
         <View className='absolute top-0 z-0 flex flex-col items-center justify-center w-full h-screen'>
           <VGlobe />
-          <Common color='' />
+          <Common />
         </View>
       </div>
     </>

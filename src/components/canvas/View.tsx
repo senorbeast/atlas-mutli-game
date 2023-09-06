@@ -4,7 +4,7 @@ import { forwardRef, Suspense, useImperativeHandle, useRef } from 'react'
 import { OrbitControls, PerspectiveCamera, View as ViewImpl } from '@react-three/drei'
 import { Three } from '@/helpers/Three'
 
-export const Common = ({ color = 'white' }) => (
+export const Common = ({ color = '#151520' }) => (
   <Suspense fallback={null}>
     {color && <color attach='background' args={[color]} />}
     {/* @ts-ignore */}
