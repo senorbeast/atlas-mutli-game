@@ -4,6 +4,9 @@ import GamePage from '@/components/dom/GamePage'
 import dynamic from 'next/dynamic'
 
 const VGlobe = dynamic(() => import('@/components/canvas/VGlobe').then((mod) => mod.VGlobe), { ssr: false })
+const GlobeTravelArc = dynamic(() => import('@/components/canvas/GlobeTravelArc').then((mod) => mod.default), {
+  ssr: false,
+})
 
 const View = dynamic(() => import('@/components/canvas/View').then((mod) => mod.View), {
   ssr: false,
@@ -29,8 +32,17 @@ export default function Page() {
         <div className='absolute z-10 flex w-screen h-screen pointer-events-none'>
           <GamePage />
         </div>
-        <View className='absolute top-0 z-0 flex flex-col items-center justify-center w-full h-screen'>
+        <View orbit className='absolute top-0 z-0 flex flex-col items-center justify-center w-full h-screen'>
           <VGlobe />
+          <GlobeTravelArc
+            color='#ffffff'
+            from={{ lat: 19.076, lon: 72.8777 }} // Mumbai coordinates
+            to={{ lat: 28.6139, lon: 77.209 }} // Delhi coordinates
+            lineWidth={1}
+            radius={100}
+            divisions={50}
+          />
+
           <Common />
         </View>
       </div>
