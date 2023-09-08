@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import Room from './Room'
+import { UserIcon } from '@heroicons/react/24/solid'
+import { useRouter } from 'next/navigation'
 
 interface room {
   id: string
@@ -28,6 +30,7 @@ const roomsList: room[] = [
 
 const Rooms = () => {
   const [search, setSearch] = useState('')
+  const router = useRouter()
 
   const filteredList = roomsList.filter((room) => {
     if (room.name.toLowerCase().includes(search.toLowerCase())) {
@@ -46,6 +49,9 @@ const Rooms = () => {
         ></input>
         <button type='button' className='px-5 button' onClick={() => {}}>
           Create New Room
+        </button>
+        <button type='button' className='px-5 button' onClick={() => router.push('/game')}>
+          <UserIcon height={20} />
         </button>
       </div>
       <div className='flex flex-wrap justify-center w-auto m-5 mt-8 gap-5 rounded-3xl'>

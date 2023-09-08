@@ -2,6 +2,7 @@
 
 import GamePage from '@/components/dom/GamePage'
 import dynamic from 'next/dynamic'
+import { useSearchParams } from 'next/navigation'
 
 const VGlobe = dynamic(() => import('@/components/canvas/VGlobe').then((mod) => mod.VGlobe), { ssr: false })
 const GlobeTravelArc = dynamic(() => import('@/components/canvas/GlobeTravelArc').then((mod) => mod.default), {
@@ -26,6 +27,8 @@ const View = dynamic(() => import('@/components/canvas/View').then((mod) => mod.
 const Common = dynamic(() => import('@/components/canvas/View').then((mod) => mod.Common), { ssr: false })
 
 export default function Page() {
+  const searchParams = useSearchParams()
+  console.log(searchParams.get('search')) // Logs "search"
   return (
     <>
       <div className='relative flex w-screen h-screen'>
@@ -35,12 +38,11 @@ export default function Page() {
         <View orbit className='absolute top-0 z-0 flex flex-col items-center justify-center w-full h-screen'>
           <VGlobe />
           <GlobeTravelArc
-            color='#ffffff'
-            from={{ lat: 19.076, lon: 72.8777 }} // Mumbai coordinates
-            to={{ lat: 28.6139, lon: 77.209 }} // Delhi coordinates
-            lineWidth={1}
+            color='red'
+            from={{ lat: 40.7128, lon: -74.006 }}
+            to={{ lat: -33.8651, lon: 151.2099 }}
             radius={100}
-            divisions={50}
+            lineWidth={2}
           />
 
           <Common />

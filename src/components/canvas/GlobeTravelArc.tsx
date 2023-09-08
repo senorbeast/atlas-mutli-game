@@ -1,31 +1,32 @@
 import React, { useRef } from 'react'
-import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
-import { CubicBezierLine, Line } from '@react-three/drei'
+import { CubicBezierLine } from '@react-three/drei'
+import { useFrame } from '@react-three/fiber'
 
 interface Coordinates {
   lat: number
   lon: number
 }
 
-interface ArcProps {
+interface BezierCurveProps {
   from: Coordinates
   to: Coordinates
   radius: number
-  divisions: number
+}
+
+interface BezierPoints {
+  start: THREE.Vector3
+  midA: THREE.Vector3
+  midB: THREE.Vector3
+  end: THREE.Vector3
+}
+
+interface ArcProps extends BezierCurveProps {
   color: string
   lineWidth: number
 }
 
-const GlobeTravelArc = ({ from, to, radius, divisions, color, lineWidth }: ArcProps) => {
-  const arcRef = useRef<THREE.Group>()
-
-  useFrame(() => {
-    if (arcRef.current) {
-      // Update the arc here if needed
-    }
-  })
-
+const beizerCurvePoints = ({ from, to, radius }: BezierCurveProps): BezierPoints => {
   // Convert latitude and longitude to spherical coordinates
   const phiFrom = from.lat * (Math.PI / 180)
   const thetaFrom = from.lon * (Math.PI / 180)
@@ -60,32 +61,41 @@ const GlobeTravelArc = ({ from, to, radius, divisions, color, lineWidth }: ArcPr
   // Mid Vector
   const vecMid = new THREE.Vector3(xMid, yMid, zMid)
 
-  // const smoothDist = distance
-  const smoothDist = map(distance, 0, 10, 0, 10.6 / distance)
-  vecMid.setLength(radius * smoothDist)
+  // Adding Height to each Bezier Control Point
+  // const fixedHeight = 50
+  // const smoothDist =
+  // const smoothDist = map(distance, 0, 10, 10, 50)
+  const fixedHeight = map(distance, 0, 200, 0, 50)
+  vecMid.setLength(radius + fixedHeight)
 
   vecFromClone.add(vecMid)
   vecToClone.add(vecMid)
 
-  vecFromClone.setLength(radius * smoothDist)
-  vecToClone.setLength(radius * smoothDist)
+  vecFromClone.setLength(radius + fixedHeight)
+  vecToClone.setLength(radius + fixedHeight)
 
-  // Create the cubic Bezier curve
-  const curve = new THREE.CubicBezierCurve3(vecFrom, vecFromClone, vecToClone, vecTo)
+  return { start: vecFrom, midA: vecFromClone, midB: vecToClone, end: vecTo }
+}
 
-  // Sample points along the Bezier curve to create the flight path
-  // const points = curve.getPoints(divisions)
+const GlobeTravelArc = ({ from, to, radius, color, lineWidth }: ArcProps) => {
+  const arcRef = useRef<THREE.Group>()
+  const lineRef = useRef()
+
+  const { start, midA, midB, end } = beizerCurvePoints({ from, to, radius })
 
   return (
     <group ref={arcRef}>
+      {/* Create the cubic Bezier curve */}
       <CubicBezierLine
-        start={vecFrom} // Starting point
-        end={vecTo} // Ending point
-        midA={vecFromClone} // First control point
-        midB={vecToClone} // Second control point
-        lineWidth={2} // In pixels (default)
-        color='red'
+        ref={lineRef}
+        start={start} // Starting point
+        end={end} // Ending point
+        midA={midA} // First control point
+        midB={midB} // Second control point
+        lineWidth={lineWidth} // In pixels (default)
+        color={color}
         dashed={false} // Default
+
         // Optional array of RGB values for each point
       />
     </group>
