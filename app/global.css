@@ -122,6 +122,9 @@
   .input {
     @apply border pointer-events-auto px-5 py-3 text-base border-gray-400 rounded-full bg-white font-semibold text-gray-800 shadow hover:bg-gray-100 dark:bg-slate-800 dark:text-white hover:dark:bg-slate-900;
   }
+  .green-first-letter::first-letter {
+    @apply text-green-500; /* Change to the desired color for the first letter */
+  }
 
   .n-container {
     @apply px-8 py-0 sm:pt-16 md:py-0 xl:py-0;
