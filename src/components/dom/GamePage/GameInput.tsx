@@ -13,7 +13,7 @@ const GameInput = () => {
   return (
     <input
       placeholder='type here'
-      className={`input ${contValid ? 'green-first-letter' : ''}`}
+      className={`input ${contValid ? 'text-blue-600' : ''}`}
       value={userInput}
       onChange={(e) => {
         setUserInput(e.target.value)
@@ -31,6 +31,9 @@ const GameInput = () => {
           setWordValid(wordValidation(userInput))
           if (contValid && wordValid) {
             addToWordSubmitted(userInput)
+            setUserInput('')
+            // setContValid(false)
+            // setWordValid(false)
           }
         }
       }}
