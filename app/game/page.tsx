@@ -1,10 +1,12 @@
 'use client'
 
 import GamePage from '@/components/dom/GamePage'
+import { latLonToVec3 } from '@/helpers/latlonToVec3'
 import dynamic from 'next/dynamic'
 import { useSearchParams } from 'next/navigation'
 
 const VGlobe = dynamic(() => import('@/components/canvas/VGlobe').then((mod) => mod.VGlobe), { ssr: false })
+const Word = dynamic(() => import('@/components/canvas/Word').then((mod) => mod.Word), { ssr: false })
 const GlobeTravelArc = dynamic(() => import('@/components/canvas/GlobeTravelArc').then((mod) => mod.default), {
   ssr: false,
 })
@@ -38,13 +40,14 @@ export default function Page() {
         <View orbit className='absolute top-0 z-0 flex flex-col items-center justify-center w-full h-screen'>
           <VGlobe />
           <GlobeTravelArc
-            color='red'
+            color='#ff2060'
             from={{ lat: 40.7128, lon: -74.006 }}
             to={{ lat: -33.8651, lon: 151.2099 }}
             radius={100}
-            lineWidth={2}
+            lineWidth={3}
           />
-
+          <Word position={latLonToVec3(40.7128, -74.006).setLength(105)} children={'New York'} />
+          <Word position={latLonToVec3(-33.8651, 151.2099).setLength(105)} children={'Syndey'} />
           <Common />
         </View>
       </div>
