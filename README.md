@@ -5,7 +5,7 @@ This project was bootstrapped with [`create-r3f-app`](https://github.com/utsuboc
 ### Run App
 
 ```
-yarn install && yarn dev
+pnpm install && pnpm dev
 ```
 
 #### Update dependencies
