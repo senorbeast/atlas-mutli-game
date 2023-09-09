@@ -12,7 +12,7 @@ export const Word = ({ children, ...props }) => {
     lineHeight: 1,
     'material-toneMapped': false,
   }
-  const ref = useRef()
+  const ref = useRef(null)
   const [hovered, setHovered] = useState(false)
   const over = (e) => (e.stopPropagation(), setHovered(true))
   const out = () => setHovered(false)
@@ -40,7 +40,8 @@ export const Word = ({ children, ...props }) => {
       onClick={() => console.log('clicked')}
       {...props}
       {...fontProps}
-      children={children}
-    />
+    >
+      {children}
+    </Text>
   )
 }

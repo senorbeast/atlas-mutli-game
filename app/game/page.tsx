@@ -46,8 +46,8 @@ export default function Page() {
             radius={100}
             lineWidth={3}
           />
-          <Word position={latLonToVec3(40.7128, -74.006).setLength(105)} children={'New York'} />
-          <Word position={latLonToVec3(-33.8651, 151.2099).setLength(105)} children={'Syndey'} />
+          <Word position={latLonToVec3(40.7128, -74.006).setLength(105)}>New York</Word>
+          <Word position={latLonToVec3(-33.8651, 151.2099).setLength(105)}> Sydney</Word>
           <Common />
         </View>
       </div>
