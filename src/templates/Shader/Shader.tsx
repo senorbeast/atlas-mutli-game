@@ -7,11 +7,14 @@ import fragment from './glsl/shader.frag'
 import { forwardRef, useImperativeHandle, useRef } from 'react'
 
 const ShaderImpl = shaderMaterial(
+  // Uniform (JS <-> GLSL Channel)
   {
     time: 0,
     color: new THREE.Color(0.05, 0.0, 0.025),
   },
+  // Vertex Shader
   vertex,
+  // Fragment Shader
   fragment,
 )
 
