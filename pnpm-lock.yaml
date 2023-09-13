@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  3d:
+    specifier: link:glsl-noise/simplex/3d
+    version: link:glsl-noise/simplex/3d
   '@babel/plugin-transform-runtime':
     specifier: ^7.22.15
     version: 7.22.15(@babel/core@7.22.17)
@@ -26,6 +29,9 @@ dependencies:
   '@react-three/fiber':
     specifier: ^8.14.1
     version: 8.14.1(react-dom@18.2.0)(react@18.2.0)(three@0.154.0)
+  '@studio-freight/lenis':
+    specifier: ^1.0.22
+    version: 1.0.22
   babel-plugin-glsl:
     specifier: ^1.0.0
     version: 1.0.0
@@ -35,6 +41,9 @@ dependencies:
   framer-motion:
     specifier: ^10.16.4
     version: 10.16.4(react-dom@18.2.0)(react@18.2.0)
+  glsl-noise:
+    specifier: ^0.0.0
+    version: 0.0.0
   glsl-random:
     specifier: ^0.0.5
     version: 0.0.5
@@ -1821,6 +1830,10 @@ packages:
 
   /@socket.io/component-emitter@3.1.0:
     resolution: {integrity: sha512-+9jVqKhRSpsc591z5vX+X5Yyw+he/HCB4iQ/RYxw35CEPaY1gnsNE43nf9n9AaYjAQrTiI/mOwKUKdUs9vf7Xg==}
+    dev: false
+
+  /@studio-freight/lenis@1.0.22:
+    resolution: {integrity: sha512-CU4VT2rZjrpp4bSqpIYe+qA4vK0yZeIl2lM0tcU5mX5k03smhCAAiDiLjgXJ1mrU9za6cU0O8C69zTOVbSBpwg==}
     dev: false
 
   /@surma/rollup-plugin-off-main-thread@1.4.2:
