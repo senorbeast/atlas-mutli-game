@@ -1,9 +1,16 @@
 'use client'
 
 import GamePage from '@/components/dom/GamePage'
+import { latLonToVec3 } from '@/helpers/latlonToVec3'
 import dynamic from 'next/dynamic'
+import { useSearchParams } from 'next/navigation'
 
-const Globe = dynamic(() => import('@/components/canvas/globe').then((mod) => mod.Globe), { ssr: false })
+const VGlobe = dynamic(() => import('@/components/canvas/VGlobe').then((mod) => mod.VGlobe), { ssr: false })
+const Word = dynamic(() => import('@/components/canvas/Word').then((mod) => mod.Word), { ssr: false })
+const GlobeTravelArc = dynamic(() => import('@/components/canvas/GlobeTravelArc').then((mod) => mod.default), {
+  ssr: false,
+})
+
 const View = dynamic(() => import('@/components/canvas/View').then((mod) => mod.View), {
   ssr: false,
   loading: () => (
@@ -22,15 +29,26 @@ const View = dynamic(() => import('@/components/canvas/View').then((mod) => mod.
 const Common = dynamic(() => import('@/components/canvas/View').then((mod) => mod.Common), { ssr: false })
 
 export default function Page() {
+  const searchParams = useSearchParams()
+  console.log(searchParams.get('search')) // Logs "search"
   return (
     <>
       <div className='relative flex w-screen h-screen'>
         <div className='absolute z-10 flex w-screen h-screen pointer-events-none'>
           <GamePage />
         </div>
-        <View className='absolute top-0 z-0 flex flex-col items-center justify-center w-full h-screen'>
-          <Globe scale={0.8} route='/' />
-          <Common color='' />
+        <View orbit className='absolute top-0 z-0 flex flex-col items-center justify-center w-full h-screen'>
+          <VGlobe />
+          <GlobeTravelArc
+            color='#ff2060'
+            from={{ lat: 40.7128, lon: -74.006 }}
+            to={{ lat: -33.8651, lon: 151.2099 }}
+            radius={100}
+            lineWidth={3}
+          />
+          <Word position={latLonToVec3(40.7128, -74.006).setLength(105)}>New York</Word>
+          <Word position={latLonToVec3(-33.8651, 151.2099).setLength(105)}> Sydney</Word>
+          <Common />
         </View>
       </div>
     </>

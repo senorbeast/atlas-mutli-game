@@ -1,9 +1,9 @@
-import useStore from '@/store/store'
+import useZStore from '@/store/store'
 import { useSpring, animated } from '@react-spring/web'
 
 const DarkToggle = () => {
-  const isDarkMode = useStore((state) => state.darkMode)
-  const toggle = useStore((state) => state.toggleMode)
+  const isDarkMode = useZStore((state) => state.darkMode)
+  const toggle = useZStore((state) => state.toggleMode)
   const properties = {
     sun: {
       r: 9,
@@ -21,9 +21,7 @@ const DarkToggle = () => {
     },
     springConfig: { mass: 4, tension: 250, friction: 35 },
   }
-  const { r, transform, cx, cy, opacity } = isDarkMode
-    ? properties['moon']
-    : properties['sun']
+  const { r, transform, cx, cy, opacity } = isDarkMode ? properties['moon'] : properties['sun']
   const svgContainerProps = useSpring({
     transform,
     config: properties.springConfig,

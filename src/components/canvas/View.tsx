@@ -4,15 +4,15 @@ import { forwardRef, Suspense, useImperativeHandle, useRef } from 'react'
 import { OrbitControls, PerspectiveCamera, View as ViewImpl } from '@react-three/drei'
 import { Three } from '@/helpers/Three'
 
-export const Common = ({ color = 'white' }) => (
+export const Common = ({ color = '#151520' }) => (
   <Suspense fallback={null}>
     {color && <color attach='background' args={[color]} />}
     {/* @ts-ignore */}
-    <ambientLight intensity={0.5} />
+    <ambientLight intensity={1} />
     {/* @ts-ignore */}
-    <pointLight position={[20, 30, 10]} intensity={1} />
+    <pointLight position={[300, 300, 300]} intensity={4} />
     {/* @ts-ignore */}
-    <pointLight position={[-10, -10, -10]} color='blue' />
+    <pointLight position={[300, -300, -400]} color='blue' />
     {/* @ts-ignore */}
     <PerspectiveCamera makeDefault fov={40} position={[0, 0, 6]} />
   </Suspense>

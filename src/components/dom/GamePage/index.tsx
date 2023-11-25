@@ -1,6 +1,8 @@
 import Chat from './Chat'
 import SettingsBar from './SettingsBar'
 import { Player } from './Player'
+import PrevWords from './PrevWords'
+import GameInput from './GameInput'
 
 // Identify player individually
 
@@ -79,9 +81,13 @@ const GamePage = () => {
       <div className='absolute block left-3/4 top-2'>
         <SettingsBar />
       </div>
+      {/* Prev Words */}
+      {/* <div className='absolute flex justify-center  w-screen blco bottom-32'>
+        <PrevWords />
+      </div> */}
       {/* Input Bar */}
       <div className='absolute flex justify-center w-screen bottom-8'>
-        <input placeholder='type here' className='input'></input>
+        <GameInput /> <PrevWords></PrevWords>
       </div>
     </>
   )

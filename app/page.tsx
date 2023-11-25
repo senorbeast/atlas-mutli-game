@@ -4,7 +4,7 @@ import MainPage from '@/components/dom/MainPage'
 import dynamic from 'next/dynamic'
 import { Suspense } from 'react'
 
-const Globe = dynamic(() => import('@/components/canvas/globe').then((mod) => mod.Globe), { ssr: false })
+const VGlobe = dynamic(() => import('@/components/canvas/VGlobe').then((mod) => mod.VGlobe), { ssr: false })
 
 const View = dynamic(() => import('@/components/canvas/View').then((mod) => mod.View), {
   ssr: false,
@@ -28,10 +28,10 @@ export default function Page() {
     <>
       <div className='relative flex flex-col flex-wrap items-center w-full mx-auto md:flex-row'>
         <div className='absolute top-0 left-0 z-0 w-full h-screen'>
-          <View className='absolute top-0 z-0 flex flex-col items-center justify-center w-full h-screen'>
+          <View orbit className='absolute top-0 z-0 flex flex-col items-center justify-center w-full h-screen'>
             <Suspense fallback={null}>
-              <Globe route='/game' position={[0, 0, 0]} scale={0.6} />
-              <Common color='' />
+              <VGlobe />
+              <Common />
             </Suspense>
           </View>
         </div>
