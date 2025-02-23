@@ -21,18 +21,21 @@ const BackgroundShader = shaderMaterial(
 
 extend({ BackgroundShader })
 
-interface  BackgroundShaderProps{
-    uTime:number
-    uColor:THREE.Color
-    uTexture:THREE.Texture
+interface BackgroundShaderProps {
+  uTime: number
+  uColor: THREE.Color
+  uTexture: THREE.Texture
 }
 
-export const BackgroundShaderMaterial = forwardRef<React.MutableRefObject<any>, BackgroundShaderProps>(({ children, ...props }, ref) => {
-  const localRef = useRef()
+export const BackgroundShaderMaterial = forwardRef<React.MutableRefObject<any>, BackgroundShaderProps>(
+  ({ children, ...props }, ref) => {
+    const localRef = useRef()
 
-  // Modifies parentRef as per localRef (child)
-  useImperativeHandle(ref, () => localRef.current)
+    // Modifies parentRef as per localRef (child)
+    useImperativeHandle(ref, () => localRef.current)
 
-  return <backgroundShader ref={localRef} glsl={THREE.GLSL3} {...props} attach='material'/>
-})
+    return <backgroundShader ref={localRef} glsl={THREE.GLSL3} {...props} attach='material' />
+  },
+)
 
+BackgroundShaderMaterial.displayName = 'BackgroundShaderMaterial'

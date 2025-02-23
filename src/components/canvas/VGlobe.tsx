@@ -1,6 +1,7 @@
 import React, { useRef, useEffect } from 'react'
 import { extend, useThree } from '@react-three/fiber'
 import ThreeGlobe from 'three-globe'
+import { WebGLRenderer } from 'three'
 
 extend({ ThreeGlobe })
 

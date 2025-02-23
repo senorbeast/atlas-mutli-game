@@ -1,20 +1,23 @@
 # Use the official Node.js image as the base image
-FROM node:14
+FROM node:23-alpine
 
 # Set the working directory inside the container
 WORKDIR /app
 
-# Copy package.json and package-lock.json files to the container
-COPY package*.json ./
+# Install pnpm globally
+RUN npm install -g pnpm
 
-# Install project dependencies
-RUN npm install
+# Copy package.json, pnpm-lock.yaml to the container
+COPY package.json pnpm-lock.yaml ./
+
+# Install project dependencies using pnpm
+RUN pnpm install
 
 # Copy the rest of the application code to the container
 COPY . .
 
 # Build the Next.js application
-RUN npm run build
+RUN pnpm run build
 
 # Specify the command to start the Next.js app
-CMD ["npm", "start"]
+CMD ["pnpm", "start"]
