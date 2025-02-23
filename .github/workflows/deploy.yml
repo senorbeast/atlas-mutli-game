@@ -1,4 +1,4 @@
-name: Build and Deploy Next.js App
+name: Build and Deploy atlas-multi-game App
 on:
   push:
     branches:
@@ -17,7 +17,7 @@ jobs:
         run: echo "${{ secrets.REGISTRY_PASSWORD }}" | docker login ghcr.io -u "${{ secrets.REGISTRY_USERNAME }}" --password-stdin
 
       - name: Set image tag
-        run: echo "IMAGE_TAG=ghcr.io/${{ secrets.REGISTRY_USERNAME }}/nextjs-app:$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+        run: echo "IMAGE_TAG=ghcr.io/${{ secrets.REGISTRY_USERNAME }}/atlas-multi-game:$(git rev-parse --short HEAD)" >> $GITHUB_ENV
 
       - name: Build and tag Docker image
         run: docker build -t ${{ env.IMAGE_TAG }} .
@@ -33,17 +33,17 @@ jobs:
       - name: Checkout GitOps repo
         uses: actions/checkout@v4
         with:
-          repository: your-org/your-gitops-repo
-          token: ${{ secrets.GITOPS_PAT }}  # Uses PAT for authentication
+          repository: senorbeast/gitops
+          token: ${{ secrets.GITOPS_PAT }}
 
-      - name: Update deployment file
+      - name: Update deployment image
         run: |
-          sed -i "s|image: .*|image: ${{ secrets.REGISTRY_USERNAME }}/nextjs-app:${{ env.IMAGE_TAG }}|" path/to/deployment.yaml
+          sed -i "s|image: ghcr.io/senorbeast/atlas-multi-game:.*|image: ghcr.io/senorbeast/atlas-multi-game:${{ env.IMAGE_TAG }}|" apps/atlas-multi-game/overlays/production/deployment-patch.yaml
 
       - name: Commit and push changes
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
-          git add .
-          git commit -m "Update image to ${{ env.IMAGE_TAG }}"
+          git add apps/atlas-multi-game/overlays/production/deployment-patch.yaml
+          git commit -m "Update atlas-multi-game image to ${{ env.IMAGE_TAG }}"
           git push origin main
