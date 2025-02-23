@@ -35,6 +35,7 @@ jobs:
         with:
           repository: senorbeast/gitops
           token: ${{ secrets.GITOPS_PAT }}
+          ref: dev
 
       - name: Update deployment image
         run: |
