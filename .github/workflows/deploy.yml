@@ -1,0 +1,49 @@
+name: Build and Deploy Next.js App
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Log in to Container Registry
+        run: echo "${{ secrets.REGISTRY_PASSWORD }}" | docker login -u "${{ secrets.REGISTRY_USERNAME }}" --password-stdin
+
+      - name: Set image tag
+        run: echo "IMAGE_TAG=nextjs-app:$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+
+      - name: Build and tag Docker image
+        run: docker build -t ${{ secrets.REGISTRY_USERNAME }}/nextjs-app:${{ env.IMAGE_TAG }} .
+
+      - name: Push Docker image
+        run: docker push ${{ secrets.REGISTRY_USERNAME }}/nextjs-app:${{ env.IMAGE_TAG }}
+
+  update-gitops:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout GitOps repo
+        uses: actions/checkout@v4
+        with:
+          repository: your-org/your-gitops-repo
+          token: ${{ secrets.GITOPS_PAT }}  # Uses PAT for authentication
+
+      - name: Update deployment file
+        run: |
+          sed -i "s|image: .*|image: ${{ secrets.REGISTRY_USERNAME }}/nextjs-app:${{ env.IMAGE_TAG }}|" path/to/deployment.yaml
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          git add .
+          git commit -m "Update image to ${{ env.IMAGE_TAG }}"
+          git push origin main
