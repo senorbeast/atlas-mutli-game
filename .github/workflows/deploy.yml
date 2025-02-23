@@ -48,4 +48,4 @@ jobs:
           git config --global user.email "github-actions@github.com"
           git add apps/atlas-multi-game/overlays/production/deployment-patch.yaml
           git commit -m "Update atlas-multi-game image to ${{ env.IMAGE_TAG }}"
-          git push origin main
+          git push origin dev
