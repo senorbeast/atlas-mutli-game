@@ -5,43 +5,44 @@ on:
       - main
   workflow_dispatch:
 jobs:
-  build-and-push:
+  build-and-deploy:
     runs-on: ubuntu-latest
-    outputs:
-      image_tag: ${{ steps.set_image_tag.outputs.image_tag }}
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
       - name: Log in to GitHub Container Registry
         run: echo "${{ secrets.REGISTRY_PASSWORD }}" | docker login ghcr.io -u "${{ secrets.REGISTRY_USERNAME }}" --password-stdin
+
       - name: Set image tag
-        id: set_image_tag
-        run: |
-          echo "image_tag=ghcr.io/${{ secrets.REGISTRY_USERNAME }}/atlas-multi-game:$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
-          echo "IMAGE_TAG=ghcr.io/${{ secrets.REGISTRY_USERNAME }}/atlas-multi-game:$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+        run: echo "IMAGE_TAG=ghcr.io/${{ secrets.REGISTRY_USERNAME }}/atlas-multi-game:$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+
       - name: Build and tag Docker image
         run: docker build -t ${{ env.IMAGE_TAG }} .
+
       - name: Push Docker image
         run: docker push ${{ env.IMAGE_TAG }}
-  update-gitops:
-    needs: build-and-push
-    runs-on: ubuntu-latest
-    steps:
+
       - name: Checkout GitOps repo
         uses: actions/checkout@v4
         with:
           repository: senorbeast/gitops
           token: ${{ secrets.GITOPS_PAT }}
           ref: dev
+          path: gitops
           fetch-depth: 0
+
       - name: Update deployment image
         run: |
-          sed -i "s|image: ghcr.io/senorbeast/atlas-multi-game:.*|image: ghcr.io/senorbeast/atlas-multi-game:$(echo ${{ needs.build-and-push.outputs.image_tag }} | awk -F: '{print $NF}')|" apps/atlas-multi-game/overlays/production/deployment-patch.yaml
+          SHORT_TAG=$(echo ${{ env.IMAGE_TAG }} | awk -F: '{print $NF}')
+          sed -i "s|image: ghcr.io/senorbeast/atlas-multi-game:.*|image: ghcr.io/senorbeast/atlas-multi-game:${SHORT_TAG}|" gitops/apps/atlas-multi-game/overlays/production/deployment-patch.yaml
+
       - name: Commit and push changes
         run: |
+          cd gitops
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
           git add apps/atlas-multi-game/overlays/production/deployment-patch.yaml
-          git commit -m "Update atlas-multi-game image to ${{ needs.build-and-push.outputs.image_tag }}"
+          git commit -m "Update atlas-multi-game image to ${{ env.IMAGE_TAG }}"
           git push origin dev
