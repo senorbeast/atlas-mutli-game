@@ -8,6 +8,8 @@ on:
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
+    outputs:
+      image_tag: ${{ steps.set-image-tag.outputs.image_tag }}
     
     steps:
       - name: Checkout code
@@ -17,7 +19,11 @@ jobs:
         run: echo "${{ secrets.REGISTRY_PASSWORD }}" | docker login ghcr.io -u "${{ secrets.REGISTRY_USERNAME }}" --password-stdin
 
       - name: Set image tag
-        run: echo "IMAGE_TAG=ghcr.io/${{ secrets.REGISTRY_USERNAME }}/atlas-multi-game:$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+        id: set-image-tag
+        run: |
+          IMAGE_TAG="ghcr.io/${{ secrets.REGISTRY_USERNAME }}/atlas-multi-game:$(git rev-parse --short HEAD)"
+          echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
+          echo "image_tag=$IMAGE_TAG" >> $GITHUB_OUTPUT
 
       - name: Build and tag Docker image
         run: docker build -t ${{ env.IMAGE_TAG }} .
@@ -40,12 +46,12 @@ jobs:
 
       - name: Update deployment image
         run: |
-          sed -i "s|image: ghcr.io/senorbeast/atlas-multi-game:.*|image: ghcr.io/senorbeast/atlas-multi-game:${{ env.IMAGE_TAG }}|" apps/atlas-multi-game/overlays/production/deployment-patch.yaml
+          sed -i "s|image: ghcr.io/senorbeast/atlas-multi-game:.*|image: ${{ needs.build-and-push.outputs.image_tag }}|" apps/atlas-multi-game/overlays/production/deployment-patch.yaml
 
       - name: Commit and push changes
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
           git add apps/atlas-multi-game/overlays/production/deployment-patch.yaml
-          git commit -m "Update atlas-multi-game image to ${{ env.IMAGE_TAG }}"
+          git commit -m "Update atlas-multi-game image to ${{ needs.build-and-push.outputs.image_tag }}"
           git push origin dev
