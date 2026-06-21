@@ -1,7 +1,5 @@
-import React, { useRef } from 'react'
 import * as THREE from 'three'
 import { CubicBezierLine } from '@react-three/drei'
-import { useFrame } from '@react-three/fiber'
 import { latLonToVec3 } from '@/helpers/latlonToVec3'
 
 interface Coordinates {
@@ -62,16 +60,12 @@ const beizerCurvePoints = ({ from, to, radius }: BezierCurveProps): BezierPoints
 }
 
 const GlobeTravelArc = ({ from, to, radius, color, lineWidth }: ArcProps) => {
-  const arcRef = useRef<THREE.Group>()
-  const lineRef = useRef()
-
   const { start, midA, midB, end } = beizerCurvePoints({ from, to, radius })
 
   return (
-    <group ref={arcRef}>
+    <group>
       {/* Create the cubic Bezier curve */}
       <CubicBezierLine
-        ref={lineRef}
         start={start} // Starting point
         end={end} // Ending point
         midA={midA} // First control point

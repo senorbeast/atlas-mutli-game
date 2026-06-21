@@ -3,7 +3,15 @@ import { LockClosedIcon } from '@heroicons/react/24/solid'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
-const Room = ({ id, name, players, mode, locked }) => {
+interface RoomProps {
+  id: string
+  name: string
+  players: number
+  mode: string
+  locked: boolean
+}
+
+const Room = ({ id, name, players, mode, locked }: RoomProps) => {
   //   console.log(id, name, players, locked)
 
   const [passBox, setPassBox] = useState(false)
@@ -37,7 +45,9 @@ const Room = ({ id, name, players, mode, locked }) => {
         <button
           type='button'
           className='w-10/12 py-3 button'
-          onClick={() => (locked ? togglePassBox() : router.push('/game'))} /** Link to GamePage */
+          onClick={() =>
+            locked ? togglePassBox() : router.push(id ? `/game?roomId=${encodeURIComponent(id)}` : '/game')
+          }
         >
           Join
         </button>

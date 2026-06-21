@@ -6,13 +6,7 @@ export interface ViewSlice {
   toggleMode: () => void
 }
 
-export const createViewSlice: StateCreator<
-  MyState,
-  [['zustand/immer', never]],
-  [],
-  ViewSlice
-> = (set) => ({
+export const createViewSlice: StateCreator<MyState, [['zustand/immer', never]], [], ViewSlice> = (set) => ({
   darkMode: true,
-  toggleMode: () =>
-    set((state) => ({ darkMode: state.darkMode ? false : true })),
+  toggleMode: () => set((state) => ({ darkMode: state.darkMode ? false : true })),
 })

@@ -1,5 +1,5 @@
-import { HeartIcon } from '@heroicons/react/solid'
-import type { player } from './index'
+import { HeartIcon } from '@heroicons/react/24/solid'
+import type { PlayerSummary } from '@/protocol/types'
 
 const ActivePlayerHighlight = ({ name }: { name: string }) => {
   return (
@@ -7,7 +7,7 @@ const ActivePlayerHighlight = ({ name }: { name: string }) => {
       <div className='p-2 rounded-full bg-amber-300 bg-opacity-50'>
         <div className='p-2 rounded-full bg-amber-300 bg-opacity-50'>
           <div className='flex items-center justify-center p-4 bg-purple-600 rounded-full w-28 h-28'>
-            <div className='font-bold text-gray-50 text-7xl'>{name[0]}</div>
+            <div className='font-bold text-gray-50 text-7xl'>{name[0]?.toUpperCase() ?? '?'}</div>
           </div>
         </div>
       </div>
@@ -21,7 +21,7 @@ const NormalPlayer = ({ name }: { name: string }) => {
       {/* // Display Unhighlighted */}
       <div className='p-6'>
         <div className='flex items-center justify-center p-4 bg-purple-600 rounded-full w-28 h-28'>
-          <div className='font-bold text-gray-50 text-7xl'>{name[0]}</div>
+          <div className='font-bold text-gray-50 text-7xl'>{name[0]?.toUpperCase() ?? '?'}</div>
         </div>
       </div>
     </>
@@ -66,7 +66,11 @@ const HeartArray = ({ numHearts, radius }: { numHearts: number; radius: number }
   )
 }
 
-export const Player = ({ id, name, active, hearts }: player) => {
+interface PlayerProps extends PlayerSummary {
+  active?: boolean
+}
+
+export const Player = ({ name, active = false }: PlayerProps) => {
   return (
     //  To enable pointer-events for players, add pointer-events-auto to className
     <div className='flex h-full even:place-self-end odd:place-self-start'>

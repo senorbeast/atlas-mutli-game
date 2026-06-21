@@ -2,6 +2,7 @@ import { useState } from 'react'
 import Room from './Room'
 import { UserIcon } from '@heroicons/react/24/solid'
 import { useRouter } from 'next/navigation'
+import { useCreateRoom } from '@/hooks/useCreateRoom'
 
 interface room {
   id: string
@@ -31,6 +32,7 @@ const roomsList: room[] = [
 const Rooms = () => {
   const [search, setSearch] = useState('')
   const router = useRouter()
+  const { createRoom, isCreating, error } = useCreateRoom()
 
   const filteredList = roomsList.filter((room) => {
     if (room.name.toLowerCase().includes(search.toLowerCase())) {
@@ -47,13 +49,26 @@ const Rooms = () => {
           className='flex h-10 px-6 py-6 input'
           onChange={(e) => setSearch(e.target.value)}
         ></input>
-        <button type='button' className='px-5 button' onClick={() => {}}>
-          Create New Room
+        <button
+          type='button'
+          className='px-5 button'
+          disabled={isCreating}
+          onClick={async () => {
+            try {
+              const room = await createRoom()
+              router.push(`/game?roomId=${encodeURIComponent(room.roomId)}`)
+            } catch {
+              // Error state is exposed by useCreateRoom.
+            }
+          }}
+        >
+          {isCreating ? 'Creating...' : 'Create New Room'}
         </button>
         <button type='button' className='px-5 button' onClick={() => router.push('/game')}>
           <UserIcon height={20} />
         </button>
       </div>
+      {error ? <div className='flex justify-center font-semibold text-red-600 pointer-events-auto'>{error}</div> : null}
       <div className='flex flex-wrap justify-center w-auto m-5 mt-8 gap-5 rounded-3xl'>
         {filteredList.map((props) => {
           return <Room key={props.name} {...props} />

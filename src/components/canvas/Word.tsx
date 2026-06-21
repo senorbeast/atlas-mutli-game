@@ -1,9 +1,16 @@
 import { useFrame } from '@react-three/fiber'
-import { useRef, useState, useEffect } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import * as THREE from 'three'
 import { Text } from '@react-three/drei'
+import type { ThreeEvent } from '@react-three/fiber'
+import type { ReactNode } from 'react'
 
-export const Word = ({ children, ...props }) => {
+interface WordProps {
+  children: ReactNode
+  position: THREE.Vector3
+}
+
+export const Word = ({ children, ...props }: WordProps) => {
   const color = new THREE.Color()
   const fontProps = {
     font: '/Inter-Bold.woff',
@@ -12,9 +19,12 @@ export const Word = ({ children, ...props }) => {
     lineHeight: 1,
     'material-toneMapped': false,
   }
-  const ref = useRef(null)
+  const ref = useRef<any>(null)
   const [hovered, setHovered] = useState(false)
-  const over = (e) => (e.stopPropagation(), setHovered(true))
+  const over = (e: ThreeEvent<PointerEvent>) => {
+    e.stopPropagation()
+    setHovered(true)
+  }
   const out = () => setHovered(false)
 
   // Change the mouse cursor on hover
@@ -27,6 +37,7 @@ export const Word = ({ children, ...props }) => {
 
   // Tie component to the render-loop
   useFrame(({ camera }) => {
+    if (!ref.current) return
     // Make text face the camera
     ref.current.quaternion.copy(camera.quaternion)
     // Animate font color

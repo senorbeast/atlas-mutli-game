@@ -1,5 +1,6 @@
 import { StateCreator } from 'zustand'
 import { MyState } from './store'
+import type { AcceptedCity } from '@/protocol/types'
 
 enum GameModes {
   notSelected,
@@ -19,6 +20,9 @@ export interface GameSlice {
 
   wordsSubmitted: string[]
   addWord: (newWord: string) => void
+  acceptedCities: AcceptedCity[]
+  currentCity: AcceptedCity | null
+  addAcceptedCity: (city: AcceptedCity) => void
 }
 export const createGameSlice: StateCreator<MyState, [['zustand/immer', never]], [], GameSlice> = (set) => ({
   id: 0,
@@ -34,5 +38,13 @@ export const createGameSlice: StateCreator<MyState, [['zustand/immer', never]], 
   addWord: (newWord) =>
     set((state) => {
       state.wordsSubmitted.push(newWord)
+    }),
+  acceptedCities: [],
+  currentCity: null,
+  addAcceptedCity: (city) =>
+    set((state) => {
+      state.acceptedCities.push(city)
+      state.currentCity = city
+      state.wordsSubmitted.push(city.name)
     }),
 })

@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import DarkToggle from './DarkToggle'
 import { HomeIcon, InformationCircleIcon } from '@heroicons/react/24/solid'
+import type { ReactNode } from 'react'
 
 const navLinks = [
   {
@@ -15,7 +16,13 @@ const navLinks = [
   },
 ]
 
-const NavLink = ({ name, href, icon }) => {
+interface NavLinkProps {
+  name: string
+  href: string
+  icon: ReactNode
+}
+
+const NavLink = ({ name, href, icon }: NavLinkProps) => {
   return (
     <li className='px-5 py-3 '>
       <a

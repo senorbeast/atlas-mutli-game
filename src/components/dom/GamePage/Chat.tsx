@@ -1,104 +1,119 @@
-import { ChatBubbleLeftEllipsisIcon } from '@heroicons/react/24/outline'
-import { useState } from 'react'
+import { ChatBubbleLeftRightIcon, PaperAirplaneIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { FormEvent, useEffect, useRef, useState } from 'react'
+import { toast } from 'sonner'
+import { useChat } from '@/hooks/useChat'
 
-interface messageType {
-  name: string
-  message: string
-}
-
-const messages: messageType[] = [
-  {
-    name: 'User',
-    message: 'Hello',
-  },
-  {
-    name: 'User2',
-    message: 'Hello there',
-  },
-  {
-    name: 'User3',
-    message: 'Hello three',
-  },
-  {
-    name: 'User4',
-    message: 'LOL',
-  },
-  {
-    name: 'User2',
-    message:
-      'Some messages can be too long to read, make sure to text-wrap? them? idk google it or maybe use a privacy focused search engine',
-  },
-  {
-    name: 'User4',
-    message: 'LMAO',
-  },
-  {
-    name: 'User4',
-    message: 'Consecutive Messages',
-  },
-]
-
-const ChatMessages = () => {
-  console.log('Message ')
-  return (
-    <div className='flex flex-col p-3 overflow-y-auto rounded-xl h-80 primary-color gap-2'>
-      {/* Chat Messages Section */}
-      {messages.map((item, i) => (
-        <div key={i} className='flex justify-start gap-3'>
-          <div className='font-extrabold'>{item.name}: </div>
-          <div className='font-base'>{item.message}</div>
-        </div>
-      ))}
-    </div>
-  )
-}
+const formatMessageTime = (value: string) =>
+  new Intl.DateTimeFormat(undefined, {
+    hour: '2-digit',
+    minute: '2-digit',
+  }).format(new Date(value))
 
 const Chat = () => {
-  const [hover, setHover] = useState(false)
-  const [input, setInput] = useState(false)
+  const [draft, setDraft] = useState('')
+  const messagesEndRef = useRef<HTMLDivElement | null>(null)
+  const { messages, playerId, unreadMessageCount, isChatOpen, setChatOpen, canSend, sendChat, getSenderName } =
+    useChat()
 
-  const toggleHover = () => {
-    setHover(!hover)
+  useEffect(() => {
+    if (!isChatOpen) return
+    messagesEndRef.current?.scrollIntoView({ block: 'end' })
+  }, [isChatOpen, messages.length])
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    const didSend = sendChat(draft)
+    if (!didSend) {
+      toast.error(canSend ? 'Enter a message first' : 'Chat is still connecting')
+      return
+    }
+
+    setDraft('')
   }
+
   return (
-    <>
-      <button type='button' className='' onMouseOver={() => setHover(true)} onMouseOut={() => setHover(false)}>
-        <div
-          className='relative h-14 rounded-t-2xl primary-color w-80'
-          onClick={(e) => {
-            setInput(true)
-            e.stopPropagation()
-          }}
-        >
-          {input ? (
-            <div
-              className='flex items-center justify-center p-3 gap-2'
-              onBlur={(e) => {
-                setInput(false)
-                e.stopPropagation()
-              }}
-            >
-              <span>Username</span>
-              <input autoFocus className='border-0  enabled:hover:border-0 ring-0 primary-color'></input>
-            </div>
-          ) : (
-            <div className='flex items-center justify-center p-3 gap-2'>
+    <div className='pointer-events-auto w-80 max-w-[calc(100vw-1.5rem)]'>
+      {isChatOpen ? (
+        <div className='overflow-hidden rounded-lg border border-slate-300 bg-white text-slate-950 shadow-2xl'>
+          <div className='flex h-12 items-center justify-between border-b border-slate-200 px-3'>
+            <div className='flex items-center gap-2 font-bold'>
+              <ChatBubbleLeftRightIcon className='h-5 w-5 text-cyan-600' />
               Chat
-              <ChatBubbleLeftEllipsisIcon height={30} />
             </div>
-          )}
+            <button
+              type='button'
+              aria-label='Close chat'
+              className='rounded p-1 text-slate-500 hover:bg-slate-100 hover:text-slate-950'
+              onClick={() => setChatOpen(false)}
+            >
+              <XMarkIcon className='h-5 w-5' />
+            </button>
+          </div>
+
+          <div className='flex h-80 flex-col gap-3 overflow-y-auto bg-slate-50 p-3'>
+            {messages.length === 0 ? (
+              <div className='flex h-full items-center justify-center text-sm font-semibold text-slate-500'>
+                No messages yet
+              </div>
+            ) : null}
+            {messages.map((item) => {
+              const isSelf = item.senderId === playerId
+              return (
+                <div key={item.id} className={`flex ${isSelf ? 'justify-end' : 'justify-start'}`}>
+                  <div
+                    className={`max-w-[78%] rounded-lg px-3 py-2 text-sm shadow-sm ${
+                      isSelf ? 'bg-cyan-600 text-white' : 'bg-white text-slate-950'
+                    }`}
+                  >
+                    <div
+                      className={`mb-1 flex items-center justify-between gap-3 text-xs ${isSelf ? 'text-cyan-50' : 'text-slate-500'}`}
+                    >
+                      <span className='font-bold'>{getSenderName(item.senderId, item.senderName)}</span>
+                      <span>{formatMessageTime(item.receivedAt)}</span>
+                    </div>
+                    <div className='break-words leading-5'>{item.content}</div>
+                  </div>
+                </div>
+              )
+            })}
+            <div ref={messagesEndRef} />
+          </div>
+
+          <form className='flex items-center gap-2 border-t border-slate-200 bg-white p-2' onSubmit={handleSubmit}>
+            <input
+              value={draft}
+              disabled={!canSend}
+              maxLength={280}
+              placeholder={canSend ? 'Message' : 'Connecting...'}
+              className='min-w-0 flex-1 rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none focus:border-cyan-500 disabled:cursor-not-allowed disabled:bg-slate-100'
+              onChange={(event) => setDraft(event.target.value)}
+            />
+            <button
+              type='submit'
+              aria-label='Send message'
+              disabled={!canSend}
+              className='flex h-10 w-10 items-center justify-center rounded-lg bg-cyan-600 text-white hover:bg-cyan-700 disabled:cursor-not-allowed disabled:opacity-60'
+            >
+              <PaperAirplaneIcon className='h-5 w-5' />
+            </button>
+          </form>
         </div>
-        {/* Chat Messages on Hover */}
-        {hover ? (
-          <>
-            <div className='absolute justify-center h-5 w-80 bottom-12'></div>
-            <div className='absolute bottom-16'>
-              <ChatMessages />
-            </div>
-          </>
-        ) : null}
-      </button>
-    </>
+      ) : (
+        <button
+          type='button'
+          className='relative flex h-12 items-center gap-2 rounded-lg border border-slate-300 bg-white px-4 font-bold text-slate-950 shadow-xl hover:bg-slate-50'
+          onClick={() => setChatOpen(true)}
+        >
+          <ChatBubbleLeftRightIcon className='h-5 w-5 text-cyan-600' />
+          Chat
+          {unreadMessageCount > 0 ? (
+            <span className='absolute -right-2 -top-2 flex min-h-5 min-w-5 items-center justify-center rounded-full bg-red-600 px-1 text-xs font-bold text-white'>
+              {unreadMessageCount > 99 ? '99+' : unreadMessageCount}
+            </span>
+          ) : null}
+        </button>
+      )}
+    </div>
   )
 }
 

@@ -6,8 +6,13 @@ import * as THREE from 'three'
 import { useMemo, useRef, useState } from 'react'
 import { Line, useCursor, MeshDistortMaterial } from '@react-three/drei'
 import { useRouter } from 'next/navigation'
+import type { ThreeElements } from '@react-three/fiber'
 
-export const Blob = ({ route = '/', ...props }) => {
+type MeshProps = ThreeElements['mesh'] & { route?: string }
+type GroupProps = ThreeElements['group'] & { route?: string }
+type PrimitiveWithoutObject = Omit<ThreeElements['primitive'], 'object'>
+
+export const Blob = ({ route = '/', ...props }: MeshProps) => {
   const router = useRouter()
   const [hovered, hover] = useState(false)
   useCursor(hovered)
@@ -16,15 +21,16 @@ export const Blob = ({ route = '/', ...props }) => {
       onClick={() => router.push(route)}
       onPointerOver={() => hover(true)}
       onPointerOut={() => hover(false)}
-      {...props}>
+      {...props}
+    >
       <sphereGeometry args={[1, 64, 64]} />
       <MeshDistortMaterial roughness={0} color={hovered ? 'hotpink' : '#1fb2f5'} />
     </mesh>
   )
 }
 
-export const Logo = ({ route = '/blob', ...props }) => {
-  const mesh = useRef(null)
+export const Logo = ({ route = '/blob', ...props }: GroupProps) => {
+  const mesh = useRef<THREE.Group | null>(null)
   const router = useRouter()
 
   const [hovered, hover] = useState(false)
@@ -32,6 +38,7 @@ export const Logo = ({ route = '/blob', ...props }) => {
 
   useCursor(hovered)
   useFrame((state, delta) => {
+    if (!mesh.current) return
     const t = state.clock.getElapsedTime()
     mesh.current.rotation.y = Math.sin(t) * (Math.PI / 8)
     mesh.current.rotation.x = Math.cos(t) * (Math.PI / 8)
@@ -54,14 +61,21 @@ export const Logo = ({ route = '/blob', ...props }) => {
   )
 }
 
-export function Duck(props) {
+export function Duck(props: PrimitiveWithoutObject) {
   const { scene } = useGLTF('/duck.glb')
+  const group = useRef<THREE.Group | null>(null)
 
-  useFrame((state, delta) => (scene.rotation.y += delta))
+  useFrame((state, delta) => {
+    if (group.current) group.current.rotation.y += delta
+  })
 
-  return <primitive object={scene} {...props} />
+  return (
+    <group ref={group}>
+      <primitive object={scene} {...props} />
+    </group>
+  )
 }
-export function Dog(props) {
+export function Dog(props: PrimitiveWithoutObject) {
   const { scene } = useGLTF('/dog.glb')
 
   return <primitive object={scene} {...props} />

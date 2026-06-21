@@ -1,4 +1,4 @@
-// https://github.com/studio-freight/lenis
+// https://github.com/darkroomengineering/lenis
 // TODO refactor for app-directory
 // See https://github.com/pmndrs/react-three-next/pull/123
 
@@ -6,7 +6,7 @@
 // 2 - add <ScrollTicker /> wherever in the canvas
 // 3 - enjoy
 import { addEffect, useFrame } from '@react-three/fiber'
-import Lenis from '@studio-freight/lenis'
+import Lenis from 'lenis'
 import { useEffect } from 'react'
 import { useRef } from 'react'
 import * as THREE from 'three'
@@ -73,12 +73,7 @@ export default function Scroll({ children }) {
 
 export const ScrollTicker = ({ smooth = 9999999 }) => {
   useFrame(({ viewport, camera }, delta) => {
-    camera.position.y = damp(
-      camera.position.y,
-      -state.progress * viewport.height,
-      smooth,
-      delta
-    )
+    camera.position.y = damp(camera.position.y, -state.progress * viewport.height, smooth, delta)
   })
 
   return null

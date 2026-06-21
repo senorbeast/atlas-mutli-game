@@ -5,16 +5,16 @@ import { create } from 'zustand'
 import { createRoomSlice, RoomSlice } from './RoomSlice'
 import { createViewSlice, ViewSlice } from './ViewSlice'
 import { createGameSlice, GameSlice } from './GameSlice'
-import { createISocketContextSlice, SocketSlice } from './SocketSlice'
+import { createRealtimeSlice, RealtimeSlice } from './RealtimeSlice'
 
-export type MyState = RoomSlice & GameSlice & ViewSlice & SocketSlice
+export type MyState = RoomSlice & GameSlice & ViewSlice & RealtimeSlice
 
 const useStoreImpl = create<MyState>()(
   immer((...a) => ({
     ...createRoomSlice(...a),
     ...createGameSlice(...a),
     ...createViewSlice(...a),
-    ...createISocketContextSlice(...a),
+    ...createRealtimeSlice(...a),
   })),
 )
 

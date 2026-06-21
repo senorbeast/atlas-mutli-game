@@ -5,7 +5,7 @@ const SettingsBar = () => {
   console.log('Settings')
   return (
     <div>
-      <button type='button' onClick={() => router.push("/")} className='button'>
+      <button type='button' onClick={() => router.push('/')} className='button'>
         Go Back
       </button>
     </div>
