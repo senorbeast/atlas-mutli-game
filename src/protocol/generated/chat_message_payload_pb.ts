@@ -2,40 +2,52 @@
 // @generated from file chat_message_payload.proto (package protobufs, syntax proto3)
 /* eslint-disable */
 
-import type { GenFile, GenMessage } from '@bufbuild/protobuf/codegenv2'
-import { fileDesc, messageDesc } from '@bufbuild/protobuf/codegenv2'
-import type { Message } from '@bufbuild/protobuf'
+import type { GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2";
+import { fileDesc, messageDesc } from "@bufbuild/protobuf/codegenv2";
+import type { Message } from "@bufbuild/protobuf";
 
 /**
  * Describes the file chat_message_payload.proto.
  */
-export const file_chat_message_payload: GenFile =
-  /*@__PURE__*/
-  fileDesc(
-    'ChpjaGF0X21lc3NhZ2VfcGF5bG9hZC5wcm90bxIJcHJvdG9idWZzIjgKEkNoYXRNZXNzYWdlUGF5bG9hZBIRCglzZW5kZXJfaWQYASABKAkSDwoHY29udGVudBgCIAEoCUIiWiBhdGxhcy1iYWNrZW5kL2ludGVybmFsL3Byb3RvYnVmc2IGcHJvdG8z',
-  )
+export const file_chat_message_payload: GenFile = /*@__PURE__*/
+  fileDesc("ChpjaGF0X21lc3NhZ2VfcGF5bG9hZC5wcm90bxIJcHJvdG9idWZzInUKEkNoYXRNZXNzYWdlUGF5bG9hZBIRCglzZW5kZXJfaWQYASABKAkSDwoHY29udGVudBgCIAEoCRISCgptZXNzYWdlX2lkGAMgASgJEhMKC3NlbmRlcl9uYW1lGAQgASgJEhIKCmNyZWF0ZWRfYXQYBSABKAlCIlogYXRsYXMtYmFja2VuZC9pbnRlcm5hbC9wcm90b2J1ZnNiBnByb3RvMw");
 
 /**
  * Payload for chat message
  *
  * @generated from message protobufs.ChatMessagePayload
  */
-export type ChatMessagePayload = Message<'protobufs.ChatMessagePayload'> & {
+export type ChatMessagePayload = Message<"protobufs.ChatMessagePayload"> & {
   /**
    * @generated from field: string sender_id = 1;
    */
-  senderId: string
+  senderId: string;
 
   /**
    * @generated from field: string content = 2;
    */
-  content: string
-}
+  content: string;
+
+  /**
+   * @generated from field: string message_id = 3;
+   */
+  messageId: string;
+
+  /**
+   * @generated from field: string sender_name = 4;
+   */
+  senderName: string;
+
+  /**
+   * @generated from field: string created_at = 5;
+   */
+  createdAt: string;
+};
 
 /**
  * Describes the message protobufs.ChatMessagePayload.
  * Use `create(ChatMessagePayloadSchema)` to create a new message.
  */
-export const ChatMessagePayloadSchema: GenMessage<ChatMessagePayload> =
-  /*@__PURE__*/
-  messageDesc(file_chat_message_payload, 0)
+export const ChatMessagePayloadSchema: GenMessage<ChatMessagePayload> = /*@__PURE__*/
+  messageDesc(file_chat_message_payload, 0);
+

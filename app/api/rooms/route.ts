@@ -4,6 +4,9 @@ const BACKEND_HTTP_URL = process.env.ATLAS_BACKEND_HTTP_URL ?? 'http://localhost
 
 interface BackendCreateRoomResponse {
   roomId?: string
+  gameKind?: string
+  status?: string
+  turnMode?: string
 }
 
 export async function POST() {
@@ -22,7 +25,12 @@ export async function POST() {
       return NextResponse.json({ error: 'Backend response did not include roomId' }, { status: 502 })
     }
 
-    return NextResponse.json({ roomId: data.roomId })
+    return NextResponse.json({
+      roomId: data.roomId,
+      gameKind: data.gameKind,
+      status: data.status,
+      turnMode: data.turnMode,
+    })
   } catch (error) {
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Unable to reach Atlas backend' },

@@ -1,10 +1,13 @@
 'use client'
 
 import { useCallback, useState } from 'react'
-import type { GameKind, RoomMetadata } from '@/protocol/types'
+import type { GameKind, RoomMetadata, TurnMode } from '@/protocol/types'
 
 interface CreateRoomResponse {
   roomId: string
+  gameKind?: GameKind
+  status?: RoomMetadata['status']
+  turnMode?: TurnMode
 }
 
 export interface CreatedRoom extends RoomMetadata {
@@ -33,10 +36,11 @@ export const useCreateRoom = () => {
 
       return {
         roomId: data.roomId,
-        gameKind: 'atlas-word',
-        status: 'waiting',
+        gameKind: data.gameKind ?? 'atlas-word',
+        status: data.status ?? 'waiting',
         maxPlayers: 8,
         isStarted: false,
+        turnMode: data.turnMode ?? 'strict-turns',
       }
     } catch (createError) {
       const message = createError instanceof Error ? createError.message : 'Unable to create room'

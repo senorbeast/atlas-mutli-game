@@ -2,63 +2,63 @@
 // @generated from file client_server_message.proto (package protobufs, syntax proto3)
 /* eslint-disable */
 
-import type { GenEnum, GenFile, GenMessage } from '@bufbuild/protobuf/codegenv2'
-import { enumDesc, fileDesc, messageDesc } from '@bufbuild/protobuf/codegenv2'
-import type { GameUpdatePayload } from './game_message_payload_pb'
-import { file_game_message_payload } from './game_message_payload_pb'
-import type { ChatMessagePayload } from './chat_message_payload_pb'
-import { file_chat_message_payload } from './chat_message_payload_pb'
-import type { Message } from '@bufbuild/protobuf'
+import type { GenEnum, GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2";
+import { enumDesc, fileDesc, messageDesc } from "@bufbuild/protobuf/codegenv2";
+import type { GameUpdatePayload } from "./game_message_payload_pb";
+import { file_game_message_payload } from "./game_message_payload_pb";
+import type { ChatMessagePayload } from "./chat_message_payload_pb";
+import { file_chat_message_payload } from "./chat_message_payload_pb";
+import type { JoinRoomPayload } from "./other_payloads_pb";
+import { file_other_payloads } from "./other_payloads_pb";
+import type { Message } from "@bufbuild/protobuf";
 
 /**
  * Describes the file client_server_message.proto.
  */
-export const file_client_server_message: GenFile =
-  /*@__PURE__*/
-  fileDesc(
-    'ChtjbGllbnRfc2VydmVyX21lc3NhZ2UucHJvdG8SCXByb3RvYnVmcyLaAQoVQ2xpZW50VG9TZXJ2ZXJNZXNzYWdlEjoKDG1lc3NhZ2VfdHlwZRgBIAEoDjIkLnByb3RvYnVmcy5DbGllbnRUb1NlcnZlck1lc3NhZ2VUeXBlEjsKE2dhbWVfdXBkYXRlX3BheWxvYWQYAyABKAsyHC5wcm90b2J1ZnMuR2FtZVVwZGF0ZVBheWxvYWRIABI9ChRjaGF0X21lc3NhZ2VfcGF5bG9hZBgEIAEoCzIdLnByb3RvYnVmcy5DaGF0TWVzc2FnZVBheWxvYWRIAEIJCgdwYXlsb2FkKmAKGUNsaWVudFRvU2VydmVyTWVzc2FnZVR5cGUSFgoSUkVRVUVTVF9HQU1FX1NUQVRFEAASFAoQU0VORF9HQU1FX1VQREFURRABEhUKEVNFTkRfQ0hBVF9NRVNTQUdFEAJCIlogYXRsYXMtYmFja2VuZC9pbnRlcm5hbC9wcm90b2J1ZnNiBnByb3RvMw',
-    [file_game_message_payload, file_chat_message_payload],
-  )
+export const file_client_server_message: GenFile = /*@__PURE__*/
+  fileDesc("ChtjbGllbnRfc2VydmVyX21lc3NhZ2UucHJvdG8SCXByb3RvYnVmcyKTAgoVQ2xpZW50VG9TZXJ2ZXJNZXNzYWdlEjoKDG1lc3NhZ2VfdHlwZRgBIAEoDjIkLnByb3RvYnVmcy5DbGllbnRUb1NlcnZlck1lc3NhZ2VUeXBlEjsKE2dhbWVfdXBkYXRlX3BheWxvYWQYAyABKAsyHC5wcm90b2J1ZnMuR2FtZVVwZGF0ZVBheWxvYWRIABI9ChRjaGF0X21lc3NhZ2VfcGF5bG9hZBgEIAEoCzIdLnByb3RvYnVmcy5DaGF0TWVzc2FnZVBheWxvYWRIABI3ChFqb2luX3Jvb21fcGF5bG9hZBgFIAEoCzIaLnByb3RvYnVmcy5Kb2luUm9vbVBheWxvYWRIAEIJCgdwYXlsb2FkKm8KGUNsaWVudFRvU2VydmVyTWVzc2FnZVR5cGUSFgoSUkVRVUVTVF9HQU1FX1NUQVRFEAASFAoQU0VORF9HQU1FX1VQREFURRABEhUKEVNFTkRfQ0hBVF9NRVNTQUdFEAISDQoJSk9JTl9ST09NEANCIlogYXRsYXMtYmFja2VuZC9pbnRlcm5hbC9wcm90b2J1ZnNiBnByb3RvMw", [file_game_message_payload, file_chat_message_payload, file_other_payloads]);
 
 /**
  * Client to server message
  *
  * @generated from message protobufs.ClientToServerMessage
  */
-export type ClientToServerMessage = Message<'protobufs.ClientToServerMessage'> & {
+export type ClientToServerMessage = Message<"protobufs.ClientToServerMessage"> & {
   /**
    * @generated from field: protobufs.ClientToServerMessageType message_type = 1;
    */
-  messageType: ClientToServerMessageType
+  messageType: ClientToServerMessageType;
 
   /**
    * @generated from oneof protobufs.ClientToServerMessage.payload
    */
-  payload:
-    | {
-        /**
-         * @generated from field: protobufs.GameUpdatePayload game_update_payload = 3;
-         */
-        value: GameUpdatePayload
-        case: 'gameUpdatePayload'
-      }
-    | {
-        /**
-         * @generated from field: protobufs.ChatMessagePayload chat_message_payload = 4;
-         */
-        value: ChatMessagePayload
-        case: 'chatMessagePayload'
-      }
-    | { case: undefined; value?: undefined }
-}
+  payload: {
+    /**
+     * @generated from field: protobufs.GameUpdatePayload game_update_payload = 3;
+     */
+    value: GameUpdatePayload;
+    case: "gameUpdatePayload";
+  } | {
+    /**
+     * @generated from field: protobufs.ChatMessagePayload chat_message_payload = 4;
+     */
+    value: ChatMessagePayload;
+    case: "chatMessagePayload";
+  } | {
+    /**
+     * @generated from field: protobufs.JoinRoomPayload join_room_payload = 5;
+     */
+    value: JoinRoomPayload;
+    case: "joinRoomPayload";
+  } | { case: undefined; value?: undefined };
+};
 
 /**
  * Describes the message protobufs.ClientToServerMessage.
  * Use `create(ClientToServerMessageSchema)` to create a new message.
  */
-export const ClientToServerMessageSchema: GenMessage<ClientToServerMessage> =
-  /*@__PURE__*/
-  messageDesc(file_client_server_message, 0)
+export const ClientToServerMessageSchema: GenMessage<ClientToServerMessage> = /*@__PURE__*/
+  messageDesc(file_client_server_message, 0);
 
 /**
  * @generated from enum protobufs.ClientToServerMessageType
@@ -78,11 +78,16 @@ export enum ClientToServerMessageType {
    * @generated from enum value: SEND_CHAT_MESSAGE = 2;
    */
   SEND_CHAT_MESSAGE = 2,
+
+  /**
+   * @generated from enum value: JOIN_ROOM = 3;
+   */
+  JOIN_ROOM = 3,
 }
 
 /**
  * Describes the enum protobufs.ClientToServerMessageType.
  */
-export const ClientToServerMessageTypeSchema: GenEnum<ClientToServerMessageType> =
-  /*@__PURE__*/
-  enumDesc(file_client_server_message, 0)
+export const ClientToServerMessageTypeSchema: GenEnum<ClientToServerMessageType> = /*@__PURE__*/
+  enumDesc(file_client_server_message, 0);
+

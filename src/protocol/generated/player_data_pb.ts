@@ -4,50 +4,62 @@
 
 // internal/protobufs
 
-import type { GenFile, GenMessage } from '@bufbuild/protobuf/codegenv2'
-import { fileDesc, messageDesc } from '@bufbuild/protobuf/codegenv2'
-import type { Message } from '@bufbuild/protobuf'
+import type { GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2";
+import { fileDesc, messageDesc } from "@bufbuild/protobuf/codegenv2";
+import type { Message } from "@bufbuild/protobuf";
 
 /**
  * Describes the file player_data.proto.
  */
-export const file_player_data: GenFile =
-  /*@__PURE__*/
-  fileDesc(
-    'ChFwbGF5ZXJfZGF0YS5wcm90bxIJcHJvdG9idWZzIkwKClBsYXllckRhdGESEQoJcGxheWVyX2lkGAEgASgJEgwKBG5hbWUYAiABKAkSDgoGaGVhcnRzGAMgASgFEg0KBXNjb3JlGAQgASgFQiJaIGF0bGFzLWJhY2tlbmQvaW50ZXJuYWwvcHJvdG9idWZzYgZwcm90bzM',
-  )
+export const file_player_data: GenFile = /*@__PURE__*/
+  fileDesc("ChFwbGF5ZXJfZGF0YS5wcm90bxIJcHJvdG9idWZzIogBCgpQbGF5ZXJEYXRhEhEKCXBsYXllcl9pZBgBIAEoCRIMCgRuYW1lGAIgASgJEg4KBmhlYXJ0cxgDIAEoBRINCgVzY29yZRgEIAEoBRIRCgljb25uZWN0ZWQYBSABKAgSEQoJam9pbmVkX2F0GAYgASgJEhQKDGxhc3Rfc2Vlbl9hdBgHIAEoCUIiWiBhdGxhcy1iYWNrZW5kL2ludGVybmFsL3Byb3RvYnVmc2IGcHJvdG8z");
 
 /**
  * PlayerData represents information about a player
  *
  * @generated from message protobufs.PlayerData
  */
-export type PlayerData = Message<'protobufs.PlayerData'> & {
+export type PlayerData = Message<"protobufs.PlayerData"> & {
   /**
    * @generated from field: string player_id = 1;
    */
-  playerId: string
+  playerId: string;
 
   /**
    * @generated from field: string name = 2;
    */
-  name: string
+  name: string;
 
   /**
    * @generated from field: int32 hearts = 3;
    */
-  hearts: number
+  hearts: number;
 
   /**
-   * Add more fields as needed for player-related data
-   *
    * @generated from field: int32 score = 4;
    */
-  score: number
-}
+  score: number;
+
+  /**
+   * @generated from field: bool connected = 5;
+   */
+  connected: boolean;
+
+  /**
+   * @generated from field: string joined_at = 6;
+   */
+  joinedAt: string;
+
+  /**
+   * @generated from field: string last_seen_at = 7;
+   */
+  lastSeenAt: string;
+};
 
 /**
  * Describes the message protobufs.PlayerData.
  * Use `create(PlayerDataSchema)` to create a new message.
  */
-export const PlayerDataSchema: GenMessage<PlayerData> = /*@__PURE__*/ messageDesc(file_player_data, 0)
+export const PlayerDataSchema: GenMessage<PlayerData> = /*@__PURE__*/
+  messageDesc(file_player_data, 0);
+

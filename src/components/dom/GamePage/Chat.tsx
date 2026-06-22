@@ -1,7 +1,9 @@
-import { ChatBubbleLeftRightIcon, PaperAirplaneIcon, XMarkIcon } from '@heroicons/react/24/outline'
-import { FormEvent, useEffect, useRef, useState } from 'react'
+import { ChatBubbleLeftRightIcon, PaperAirplaneIcon, SignalIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { FormEvent, UIEvent, useEffect, useRef, useState } from 'react'
 import { toast } from 'sonner'
 import { useChat } from '@/hooks/useChat'
+import useStore from '@/store/store'
+import { Tooltip } from '@/components/ui/Tooltip'
 
 const formatMessageTime = (value: string) =>
   new Intl.DateTimeFormat(undefined, {
@@ -9,11 +11,49 @@ const formatMessageTime = (value: string) =>
     minute: '2-digit',
   }).format(new Date(value))
 
-const Chat = () => {
+interface ChatProps {
+  realtimeError: string | null
+}
+
+const ChatConnectionIndicator = ({ realtimeError }: ChatProps) => {
+  const connectionStatus = useStore((state) => state.connectionStatus)
+  const isLive = connectionStatus === 'connected'
+  const tooltip = isLive
+    ? 'WebSocket connection is live'
+    : realtimeError
+      ? `WebSocket ${connectionStatus}: ${realtimeError}`
+      : `WebSocket connection is ${connectionStatus}`
+
+  return (
+    <Tooltip content={tooltip}>
+      <span
+        aria-label={tooltip}
+        className={`flex h-7 w-7 items-center justify-center rounded-full border ${
+          isLive ? 'border-emerald-300 bg-emerald-100 text-emerald-700' : 'border-slate-300 bg-slate-100 text-slate-500'
+        }`}
+      >
+        <SignalIcon className='h-4 w-4' />
+      </span>
+    </Tooltip>
+  )
+}
+
+const Chat = ({ realtimeError }: ChatProps) => {
   const [draft, setDraft] = useState('')
   const messagesEndRef = useRef<HTMLDivElement | null>(null)
-  const { messages, playerId, unreadMessageCount, isChatOpen, setChatOpen, canSend, sendChat, getSenderName } =
-    useChat()
+  const {
+    messages,
+    playerId,
+    unreadMessageCount,
+    isChatOpen,
+    hasOlderChatMessages,
+    isLoadingOlderMessages,
+    setChatOpen,
+    loadOlderMessages,
+    canSend,
+    sendChat,
+    getSenderName,
+  } = useChat()
 
   useEffect(() => {
     if (!isChatOpen) return
@@ -31,6 +71,10 @@ const Chat = () => {
     setDraft('')
   }
 
+  const handleScroll = (event: UIEvent<HTMLDivElement>) => {
+    if (event.currentTarget.scrollTop <= 24) void loadOlderMessages()
+  }
+
   return (
     <div className='pointer-events-auto w-80 max-w-[calc(100vw-1.5rem)]'>
       {isChatOpen ? (
@@ -39,6 +83,7 @@ const Chat = () => {
             <div className='flex items-center gap-2 font-bold'>
               <ChatBubbleLeftRightIcon className='h-5 w-5 text-cyan-600' />
               Chat
+              <ChatConnectionIndicator realtimeError={realtimeError} />
             </div>
             <button
               type='button'
@@ -50,7 +95,17 @@ const Chat = () => {
             </button>
           </div>
 
-          <div className='flex h-80 flex-col gap-3 overflow-y-auto bg-slate-50 p-3'>
+          <div className='flex h-80 flex-col gap-3 overflow-y-auto bg-slate-50 p-3' onScroll={handleScroll}>
+            {hasOlderChatMessages ? (
+              <button
+                type='button'
+                disabled={isLoadingOlderMessages}
+                className='self-center rounded border border-slate-300 bg-white px-3 py-1 text-xs font-semibold text-slate-600 disabled:opacity-60'
+                onClick={() => void loadOlderMessages()}
+              >
+                {isLoadingOlderMessages ? 'Loading...' : 'Load earlier messages'}
+              </button>
+            ) : null}
             {messages.length === 0 ? (
               <div className='flex h-full items-center justify-center text-sm font-semibold text-slate-500'>
                 No messages yet
@@ -106,6 +161,7 @@ const Chat = () => {
         >
           <ChatBubbleLeftRightIcon className='h-5 w-5 text-cyan-600' />
           Chat
+          <ChatConnectionIndicator realtimeError={realtimeError} />
           {unreadMessageCount > 0 ? (
             <span className='absolute -right-2 -top-2 flex min-h-5 min-w-5 items-center justify-center rounded-full bg-red-600 px-1 text-xs font-bold text-white'>
               {unreadMessageCount > 99 ? '99+' : unreadMessageCount}

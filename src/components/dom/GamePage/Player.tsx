@@ -1,88 +1,34 @@
-import { HeartIcon } from '@heroicons/react/24/solid'
 import type { PlayerSummary } from '@/protocol/types'
-
-const ActivePlayerHighlight = ({ name }: { name: string }) => {
-  return (
-    <div className='p-2 rounded-full bg-amber-300 bg-opacity-50'>
-      <div className='p-2 rounded-full bg-amber-300 bg-opacity-50'>
-        <div className='p-2 rounded-full bg-amber-300 bg-opacity-50'>
-          <div className='flex items-center justify-center p-4 bg-purple-600 rounded-full w-28 h-28'>
-            <div className='font-bold text-gray-50 text-7xl'>{name[0]?.toUpperCase() ?? '?'}</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-const NormalPlayer = ({ name }: { name: string }) => {
-  return (
-    <>
-      {/* // Display Unhighlighted */}
-      <div className='p-6'>
-        <div className='flex items-center justify-center p-4 bg-purple-600 rounded-full w-28 h-28'>
-          <div className='font-bold text-gray-50 text-7xl'>{name[0]?.toUpperCase() ?? '?'}</div>
-        </div>
-      </div>
-    </>
-  )
-}
-
-const HeartArray = ({ numHearts, radius }: { numHearts: number; radius: number }) => {
-  const heartSpacing = 20 // Adjust this value for the desired spacing between hearts
-  const circumference = 2 * Math.PI * radius
-  const totalHeartWidth = numHearts * heartSpacing
-
-  const angleBetweenHearts = (totalHeartWidth / circumference) * (2 * Math.PI)
-
-  return (
-    <div
-      className='relative'
-      style={{
-        width: `${circumference}px`,
-        height: `${totalHeartWidth}px`,
-        transformOrigin: 'center top',
-        transform: `rotate(${180 - (angleBetweenHearts * 180) / Math.PI}deg)`,
-      }}
-    >
-      {Array.from({ length: numHearts }, (_, index) => {
-        const angle = index * angleBetweenHearts
-        const x = radius * Math.sin(angle)
-        const y = -radius * Math.cos(angle)
-
-        return (
-          <HeartIcon
-            key={index}
-            className='absolute w-6 h-6 text-red-500'
-            style={{
-              left: `calc(50% + ${x}px)`,
-              top: `calc(50% + ${y}px)`,
-              transform: 'translate(-50%, -50%)',
-            }}
-          />
-        )
-      })}
-    </div>
-  )
-}
 
 interface PlayerProps extends PlayerSummary {
   active?: boolean
+  align?: 'left' | 'right'
 }
 
-export const Player = ({ name, active = false }: PlayerProps) => {
+export const Player = ({ name, active = false, score, isSelf, connected = true, align = 'left' }: PlayerProps) => {
   return (
-    //  To enable pointer-events for players, add pointer-events-auto to className
-    <div className='flex h-full even:place-self-end odd:place-self-start'>
-      {/* <div className='flex h-full bg-green-400 rounded-3xl even:bg-red-500 even:place-self-end odd:bg-blue-500 odd:place-self-start'> */}
-      <div className='flex flex-col items-center justify-start gap-2'>
-        {/* Highlight Active Player */}
-        {/* Adjust numHearts and radius as needed */}
-        <div>
-          {/* <HeartArray numHearts={8} radius={40} /> */}
-          {active ? <ActivePlayerHighlight name={name} /> : <NormalPlayer name={name} />}
+    <div
+      className={`flex items-center gap-3 rounded-lg border px-3 py-2 shadow-lg ${
+        active ? 'border-amber-300 bg-amber-100 text-slate-950' : 'border-slate-300 bg-white/90 text-slate-950'
+      } ${align === 'right' ? 'flex-row-reverse text-right' : ''}`}
+    >
+      <div
+        className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-black ${
+          active ? 'bg-amber-400 text-slate-950' : 'bg-purple-600 text-white'
+        }`}
+      >
+        {name[0]?.toUpperCase() ?? '?'}
+      </div>
+      <div className='min-w-0 flex-1'>
+        <div className='truncate text-sm font-bold'>
+          {name}
+          {isSelf ? ' (you)' : ''}
         </div>
-        <span className='flex font-bold text-black'>{name}</span>
+        <div className='flex items-center gap-2 text-xs font-semibold text-slate-600'>
+          <span>Score {score}</span>
+          {!connected ? <span>Offline</span> : null}
+          {active ? <span className='text-amber-700'>Turn</span> : null}
+        </div>
       </div>
     </div>
   )

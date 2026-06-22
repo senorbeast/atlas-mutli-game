@@ -2,38 +2,202 @@
 // @generated from file other_payloads.proto (package protobufs, syntax proto3)
 /* eslint-disable */
 
-import type { GenFile, GenMessage } from '@bufbuild/protobuf/codegenv2'
-import { fileDesc, messageDesc } from '@bufbuild/protobuf/codegenv2'
-import type { Message } from '@bufbuild/protobuf'
+import type { GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2";
+import { fileDesc, messageDesc } from "@bufbuild/protobuf/codegenv2";
+import type { PlayerData } from "./player_data_pb";
+import { file_player_data } from "./player_data_pb";
+import type { GameStatePayload } from "./game_message_payload_pb";
+import { file_game_message_payload } from "./game_message_payload_pb";
+import type { Message } from "@bufbuild/protobuf";
 
 /**
  * Describes the file other_payloads.proto.
  */
-export const file_other_payloads: GenFile =
-  /*@__PURE__*/
-  fileDesc(
-    'ChRvdGhlcl9wYXlsb2Fkcy5wcm90bxIJcHJvdG9idWZzIjcKE09uQ29ubmVjdEFja1BheWxvYWQSDgoGcm9vbUlkGAEgASgJEhAKCHBsYXllcklkGAIgASgJQiJaIGF0bGFzLWJhY2tlbmQvaW50ZXJuYWwvcHJvdG9idWZzYgZwcm90bzM',
-  )
+export const file_other_payloads: GenFile = /*@__PURE__*/
+  fileDesc("ChRvdGhlcl9wYXlsb2Fkcy5wcm90bxIJcHJvdG9idWZzIk0KD0pvaW5Sb29tUGF5bG9hZBIUCgxkaXNwbGF5X25hbWUYASABKAkSEQoJZ2FtZV9raW5kGAIgASgJEhEKCXR1cm5fbW9kZRgDIAEoCSK3AQoTT25Db25uZWN0QWNrUGF5bG9hZBIPCgdyb29tX2lkGAEgASgJEhEKCXBsYXllcl9pZBgCIAEoCRIRCglnYW1lX2tpbmQYAyABKAkSJQoEcm9vbRgEIAEoCzIXLnByb3RvYnVmcy5Sb29tU25hcHNob3QSLwoKZ2FtZV9zdGF0ZRgFIAEoCzIbLnByb3RvYnVmcy5HYW1lU3RhdGVQYXlsb2FkEhEKCXR1cm5fbW9kZRgGIAEoCSK4AgoMUm9vbVNuYXBzaG90Eg8KB3Jvb21faWQYASABKAkSEQoJZ2FtZV9raW5kGAIgASgJEg4KBnN0YXR1cxgDIAEoCRITCgttYXhfcGxheWVycxgEIAEoBRISCgppc19zdGFydGVkGAUgASgIEhIKCmNyZWF0ZWRfYXQYBiABKAkSEgoKc3RhcnRlZF9hdBgHIAEoCRISCgpleHBpcmVzX2F0GAggASgJEiYKB3BsYXllcnMYCSADKAsyFS5wcm90b2J1ZnMuUGxheWVyRGF0YRIRCgl0dXJuX21vZGUYCiABKAkSHgoWY3VycmVudF90dXJuX3BsYXllcl9pZBgLIAEoCRIgChhjdXJyZW50X3R1cm5fcGxheWVyX25hbWUYDCABKAkSEgoKdHVybl9pbmRleBgNIAEoBSIzChJTZXJ2ZXJFcnJvclBheWxvYWQSDAoEY29kZRgBIAEoCRIPCgdtZXNzYWdlGAIgASgJIjoKEVJvb21VcGRhdGVQYXlsb2FkEiUKBHJvb20YASABKAsyFy5wcm90b2J1ZnMuUm9vbVNuYXBzaG90QiJaIGF0bGFzLWJhY2tlbmQvaW50ZXJuYWwvcHJvdG9idWZzYgZwcm90bzM", [file_player_data, file_game_message_payload]);
+
+/**
+ * @generated from message protobufs.JoinRoomPayload
+ */
+export type JoinRoomPayload = Message<"protobufs.JoinRoomPayload"> & {
+  /**
+   * @generated from field: string display_name = 1;
+   */
+  displayName: string;
+
+  /**
+   * @generated from field: string game_kind = 2;
+   */
+  gameKind: string;
+
+  /**
+   * @generated from field: string turn_mode = 3;
+   */
+  turnMode: string;
+};
+
+/**
+ * Describes the message protobufs.JoinRoomPayload.
+ * Use `create(JoinRoomPayloadSchema)` to create a new message.
+ */
+export const JoinRoomPayloadSchema: GenMessage<JoinRoomPayload> = /*@__PURE__*/
+  messageDesc(file_other_payloads, 0);
 
 /**
  * @generated from message protobufs.OnConnectAckPayload
  */
-export type OnConnectAckPayload = Message<'protobufs.OnConnectAckPayload'> & {
+export type OnConnectAckPayload = Message<"protobufs.OnConnectAckPayload"> & {
   /**
-   * @generated from field: string roomId = 1;
+   * @generated from field: string room_id = 1;
    */
-  roomId: string
+  roomId: string;
 
   /**
-   * @generated from field: string playerId = 2;
+   * @generated from field: string player_id = 2;
    */
-  playerId: string
-}
+  playerId: string;
+
+  /**
+   * @generated from field: string game_kind = 3;
+   */
+  gameKind: string;
+
+  /**
+   * @generated from field: protobufs.RoomSnapshot room = 4;
+   */
+  room?: RoomSnapshot | undefined;
+
+  /**
+   * @generated from field: protobufs.GameStatePayload game_state = 5;
+   */
+  gameState?: GameStatePayload | undefined;
+
+  /**
+   * @generated from field: string turn_mode = 6;
+   */
+  turnMode: string;
+};
 
 /**
  * Describes the message protobufs.OnConnectAckPayload.
  * Use `create(OnConnectAckPayloadSchema)` to create a new message.
  */
-export const OnConnectAckPayloadSchema: GenMessage<OnConnectAckPayload> =
-  /*@__PURE__*/
-  messageDesc(file_other_payloads, 0)
+export const OnConnectAckPayloadSchema: GenMessage<OnConnectAckPayload> = /*@__PURE__*/
+  messageDesc(file_other_payloads, 1);
+
+/**
+ * @generated from message protobufs.RoomSnapshot
+ */
+export type RoomSnapshot = Message<"protobufs.RoomSnapshot"> & {
+  /**
+   * @generated from field: string room_id = 1;
+   */
+  roomId: string;
+
+  /**
+   * @generated from field: string game_kind = 2;
+   */
+  gameKind: string;
+
+  /**
+   * @generated from field: string status = 3;
+   */
+  status: string;
+
+  /**
+   * @generated from field: int32 max_players = 4;
+   */
+  maxPlayers: number;
+
+  /**
+   * @generated from field: bool is_started = 5;
+   */
+  isStarted: boolean;
+
+  /**
+   * @generated from field: string created_at = 6;
+   */
+  createdAt: string;
+
+  /**
+   * @generated from field: string started_at = 7;
+   */
+  startedAt: string;
+
+  /**
+   * @generated from field: string expires_at = 8;
+   */
+  expiresAt: string;
+
+  /**
+   * @generated from field: repeated protobufs.PlayerData players = 9;
+   */
+  players: PlayerData[];
+
+  /**
+   * @generated from field: string turn_mode = 10;
+   */
+  turnMode: string;
+
+  /**
+   * @generated from field: string current_turn_player_id = 11;
+   */
+  currentTurnPlayerId: string;
+
+  /**
+   * @generated from field: string current_turn_player_name = 12;
+   */
+  currentTurnPlayerName: string;
+
+  /**
+   * @generated from field: int32 turn_index = 13;
+   */
+  turnIndex: number;
+};
+
+/**
+ * Describes the message protobufs.RoomSnapshot.
+ * Use `create(RoomSnapshotSchema)` to create a new message.
+ */
+export const RoomSnapshotSchema: GenMessage<RoomSnapshot> = /*@__PURE__*/
+  messageDesc(file_other_payloads, 2);
+
+/**
+ * @generated from message protobufs.ServerErrorPayload
+ */
+export type ServerErrorPayload = Message<"protobufs.ServerErrorPayload"> & {
+  /**
+   * @generated from field: string code = 1;
+   */
+  code: string;
+
+  /**
+   * @generated from field: string message = 2;
+   */
+  message: string;
+};
+
+/**
+ * Describes the message protobufs.ServerErrorPayload.
+ * Use `create(ServerErrorPayloadSchema)` to create a new message.
+ */
+export const ServerErrorPayloadSchema: GenMessage<ServerErrorPayload> = /*@__PURE__*/
+  messageDesc(file_other_payloads, 3);
+
+/**
+ * @generated from message protobufs.RoomUpdatePayload
+ */
+export type RoomUpdatePayload = Message<"protobufs.RoomUpdatePayload"> & {
+  /**
+   * @generated from field: protobufs.RoomSnapshot room = 1;
+   */
+  room?: RoomSnapshot | undefined;
+};
+
+/**
+ * Describes the message protobufs.RoomUpdatePayload.
+ * Use `create(RoomUpdatePayloadSchema)` to create a new message.
+ */
+export const RoomUpdatePayloadSchema: GenMessage<RoomUpdatePayload> = /*@__PURE__*/
+  messageDesc(file_other_payloads, 4);
+

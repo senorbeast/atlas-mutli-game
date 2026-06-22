@@ -2,82 +2,173 @@
 // @generated from file game_message_payload.proto (package protobufs, syntax proto3)
 /* eslint-disable */
 
-import type { GenFile, GenMessage } from '@bufbuild/protobuf/codegenv2'
-import { fileDesc, messageDesc } from '@bufbuild/protobuf/codegenv2'
-import type { Message } from '@bufbuild/protobuf'
+import type { GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2";
+import { fileDesc, messageDesc } from "@bufbuild/protobuf/codegenv2";
+import type { Message } from "@bufbuild/protobuf";
 
 /**
  * Describes the file game_message_payload.proto.
  */
-export const file_game_message_payload: GenFile =
-  /*@__PURE__*/
-  fileDesc(
-    'ChpnYW1lX21lc3NhZ2VfcGF5bG9hZC5wcm90bxIJcHJvdG9idWZzIl0KEEdhbWVTdGF0ZVBheWxvYWQSDQoFbGV2ZWwYASABKAUSEgoKaXNfc3RhcnRlZBgCIAEoCBIPCgdpc19vdmVyGAMgASgIEhUKDWN1cnJlbnRMZXR0ZXIYBCABKAkiMAoRR2FtZVVwZGF0ZVBheWxvYWQSDQoFbGV2ZWwYASABKAUSDAoEdHlwZRgCIAEoCUIiWiBhdGxhcy1iYWNrZW5kL2ludGVybmFsL3Byb3RvYnVmc2IGcHJvdG8z',
-  )
+export const file_game_message_payload: GenFile = /*@__PURE__*/
+  fileDesc("ChpnYW1lX21lc3NhZ2VfcGF5bG9hZC5wcm90bxIJcHJvdG9idWZzIrUCChBHYW1lU3RhdGVQYXlsb2FkEg0KBWxldmVsGAEgASgFEhIKCmlzX3N0YXJ0ZWQYAiABKAgSDwoHaXNfb3ZlchgDIAEoCBIWCg5jdXJyZW50X2xldHRlchgEIAEoCRIRCglnYW1lX2tpbmQYBSABKAkSMAoPYWNjZXB0ZWRfY2l0aWVzGAYgAygLMhcucHJvdG9idWZzLkFjY2VwdGVkQ2l0eRISCgpzdGFydGVkX2F0GAcgASgJEhIKCmV4cGlyZXNfYXQYCCABKAkSEgoKZW5kX3JlYXNvbhgJIAEoCRIeChZjdXJyZW50X3R1cm5fcGxheWVyX2lkGAogASgJEiAKGGN1cnJlbnRfdHVybl9wbGF5ZXJfbmFtZRgLIAEoCRISCgp0dXJuX2luZGV4GAwgASgFIrEBChFHYW1lVXBkYXRlUGF5bG9hZBINCgVsZXZlbBgBIAEoBRIMCgR0eXBlGAIgASgJEhEKCWdhbWVfa2luZBgDIAEoCRIRCgljaXR5X25hbWUYBCABKAkSLgoNYWNjZXB0ZWRfY2l0eRgFIAEoCzIXLnByb3RvYnVmcy5BY2NlcHRlZENpdHkSEgoKZXJyb3JfY29kZRgGIAEoCRIVCg1lcnJvcl9tZXNzYWdlGAcgASgJIpIBCgxBY2NlcHRlZENpdHkSEQoJY2l0eV9oYXNoGAEgASgJEgwKBG5hbWUYAiABKAkSHgoWc3VibWl0dGVkX2J5X3BsYXllcl9pZBgGIAEoCRIZChFzdWJtaXR0ZWRfYnlfbmFtZRgHIAEoCRIUCgxzdWJtaXR0ZWRfYXQYCCABKAlKBAgDEARKBAgEEAVKBAgFEAZCIlogYXRsYXMtYmFja2VuZC9pbnRlcm5hbC9wcm90b2J1ZnNiBnByb3RvMw");
 
 /**
  * Payload for game state
  *
  * @generated from message protobufs.GameStatePayload
  */
-export type GameStatePayload = Message<'protobufs.GameStatePayload'> & {
+export type GameStatePayload = Message<"protobufs.GameStatePayload"> & {
   /**
-   * Define your game state fields here
-   *
    * @generated from field: int32 level = 1;
    */
-  level: number
+  level: number;
 
   /**
    * @generated from field: bool is_started = 2;
    */
-  isStarted: boolean
+  isStarted: boolean;
 
   /**
    * @generated from field: bool is_over = 3;
    */
-  isOver: boolean
+  isOver: boolean;
 
   /**
-   * array usedPlaces
-   * ... other fields
-   *
-   * @generated from field: string currentLetter = 4;
+   * @generated from field: string current_letter = 4;
    */
-  currentLetter: string
-}
+  currentLetter: string;
+
+  /**
+   * @generated from field: string game_kind = 5;
+   */
+  gameKind: string;
+
+  /**
+   * @generated from field: repeated protobufs.AcceptedCity accepted_cities = 6;
+   */
+  acceptedCities: AcceptedCity[];
+
+  /**
+   * @generated from field: string started_at = 7;
+   */
+  startedAt: string;
+
+  /**
+   * @generated from field: string expires_at = 8;
+   */
+  expiresAt: string;
+
+  /**
+   * @generated from field: string end_reason = 9;
+   */
+  endReason: string;
+
+  /**
+   * @generated from field: string current_turn_player_id = 10;
+   */
+  currentTurnPlayerId: string;
+
+  /**
+   * @generated from field: string current_turn_player_name = 11;
+   */
+  currentTurnPlayerName: string;
+
+  /**
+   * @generated from field: int32 turn_index = 12;
+   */
+  turnIndex: number;
+};
 
 /**
  * Describes the message protobufs.GameStatePayload.
  * Use `create(GameStatePayloadSchema)` to create a new message.
  */
-export const GameStatePayloadSchema: GenMessage<GameStatePayload> =
-  /*@__PURE__*/
-  messageDesc(file_game_message_payload, 0)
+export const GameStatePayloadSchema: GenMessage<GameStatePayload> = /*@__PURE__*/
+  messageDesc(file_game_message_payload, 0);
 
 /**
  * Payload for game update
  *
  * @generated from message protobufs.GameUpdatePayload
  */
-export type GameUpdatePayload = Message<'protobufs.GameUpdatePayload'> & {
+export type GameUpdatePayload = Message<"protobufs.GameUpdatePayload"> & {
   /**
-   * Define minimal version of game state here
-   *
    * @generated from field: int32 level = 1;
    */
-  level: number
+  level: number;
 
   /**
    * @generated from field: string type = 2;
    */
-  type: string
-}
+  type: string;
+
+  /**
+   * @generated from field: string game_kind = 3;
+   */
+  gameKind: string;
+
+  /**
+   * @generated from field: string city_name = 4;
+   */
+  cityName: string;
+
+  /**
+   * @generated from field: protobufs.AcceptedCity accepted_city = 5;
+   */
+  acceptedCity?: AcceptedCity | undefined;
+
+  /**
+   * @generated from field: string error_code = 6;
+   */
+  errorCode: string;
+
+  /**
+   * @generated from field: string error_message = 7;
+   */
+  errorMessage: string;
+};
 
 /**
  * Describes the message protobufs.GameUpdatePayload.
  * Use `create(GameUpdatePayloadSchema)` to create a new message.
  */
-export const GameUpdatePayloadSchema: GenMessage<GameUpdatePayload> =
-  /*@__PURE__*/
-  messageDesc(file_game_message_payload, 1)
+export const GameUpdatePayloadSchema: GenMessage<GameUpdatePayload> = /*@__PURE__*/
+  messageDesc(file_game_message_payload, 1);
+
+/**
+ * @generated from message protobufs.AcceptedCity
+ */
+export type AcceptedCity = Message<"protobufs.AcceptedCity"> & {
+  /**
+   * @generated from field: string city_hash = 1;
+   */
+  cityHash: string;
+
+  /**
+   * @generated from field: string name = 2;
+   */
+  name: string;
+
+  /**
+   * @generated from field: string submitted_by_player_id = 6;
+   */
+  submittedByPlayerId: string;
+
+  /**
+   * @generated from field: string submitted_by_name = 7;
+   */
+  submittedByName: string;
+
+  /**
+   * @generated from field: string submitted_at = 8;
+   */
+  submittedAt: string;
+};
+
+/**
+ * Describes the message protobufs.AcceptedCity.
+ * Use `create(AcceptedCitySchema)` to create a new message.
+ */
+export const AcceptedCitySchema: GenMessage<AcceptedCity> = /*@__PURE__*/
+  messageDesc(file_game_message_payload, 2);
+
