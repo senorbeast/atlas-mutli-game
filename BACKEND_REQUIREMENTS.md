@@ -2,6 +2,30 @@
 
 This document records the backend contract the frontend expects for Atlas multiplayer.
 
+## Current Contract Summary
+
+- WebSockets use `GET /rooms/{roomId}/ws`.
+- The first client message must be protobuf `JOIN_ROOM` with `display_name`, `game_kind`, and optional `turn_mode`.
+- The ACK includes `roomId`, `playerId`, `gameKind`, `turnMode`, room/player/score metadata, active turn, and current game snapshot.
+- Chat messages are room-scoped. Stored and HTTP-returned chat messages do not include `roomId`.
+- Atlas game actions are backend-authoritative. The frontend may pre-validate for UX, but accepted city history and scores update only from backend events/snapshots.
+- Default mode is `strict-turns`; `free-for-all` remains supported through `turn_mode`.
+
+```mermaid
+flowchart TD
+  Create["GET /create"]
+  WS["GET /rooms/{roomId}/ws"]
+  Join["JOIN_ROOM"]
+  Ack["SEND_ON_CONNECT_ACK<br/>room + player + game snapshot"]
+  Chat["GET /rooms/{roomId}/chat"]
+  Play["SEND_GAME_UPDATE"]
+  Events["game update -> game state -> room update"]
+
+  Create --> WS --> Join --> Ack
+  Ack --> Chat
+  Ack --> Play --> Events
+```
+
 ## Current Routes
 
 - `GET /create?gameKind=atlas-word&turnMode=strict-turns`
@@ -26,6 +50,20 @@ This document records the backend contract the frontend expects for Atlas multip
 - Player snapshots include `player_id`, `name`, `hearts`, `score`, `connected`, `joined_at`, and `last_seen_at`.
 - Server broadcasts `BROADCAST_ROOM_UPDATE` when players join, leave, or score changes.
 
+```mermaid
+sequenceDiagram
+  participant FE as Frontend
+  participant BE as Backend
+  participant Room as GameRoom
+
+  FE->>BE: WebSocket /rooms/{roomId}/ws
+  FE->>BE: JOIN_ROOM(display_name, game_kind, turn_mode)
+  BE->>Room: Validate and add player
+  Room-->>BE: RoomSnapshot + GameStatePayload
+  BE-->>FE: SEND_ON_CONNECT_ACK
+  BE-->>FE: BROADCAST_ROOM_UPDATE to room
+```
+
 ## Chat
 
 - Client chat payload only needs `content`; backend derives sender identity from the connection.
@@ -33,6 +71,17 @@ This document records the backend contract the frontend expects for Atlas multip
 - Live chat broadcasts include `message_id`, `sender_id`, `sender_name`, `content`, and `created_at`.
 - Chat history messages are room-scoped by endpoint and do not include `roomId` per message.
 - History pagination is HTTP latest-first; frontend dedupes history and live messages by `message_id`.
+
+```mermaid
+flowchart LR
+  Live["WebSocket chat broadcast"]
+  History["HTTP chat history page"]
+  Dedupe["Dedupe by message_id"]
+  Store["Chronological frontend chat store"]
+
+  Live --> Dedupe
+  History --> Dedupe --> Store
+```
 
 ## Atlas Word Game
 
@@ -51,12 +100,52 @@ This document records the backend contract the frontend expects for Atlas multip
 - `GameStatePayload` includes `current_turn_player_id`, `current_turn_player_name`, and `turn_index`.
 - Game ends when 250 cities are accepted or 30 minutes have elapsed from room/game start.
 
+```mermaid
+sequenceDiagram
+  participant FE as Active Client
+  participant BE as Backend
+  participant Room as GameRoom
+  participant Game as AtlasWordGame
+  participant All as All Clients
+
+  FE->>BE: SEND_GAME_UPDATE(type=submit_city, city_name)
+  BE->>Room: Check joined connection and turn mode
+  Room->>Game: Validate city, duplicate, required letter
+  Game-->>Room: AcceptedCity + snapshot
+  Room->>Room: Increment score and advance turn
+  BE-->>All: BROADCAST_GAME_UPDATE
+  BE-->>All: RESPOND_GAME_STATE
+  BE-->>All: BROADCAST_ROOM_UPDATE
+```
+
+## Accepted Move Event Ordering
+
+After an accepted move, clients expect this order:
+
+1. `BROADCAST_GAME_UPDATE`
+2. `RESPOND_GAME_STATE`
+3. `BROADCAST_ROOM_UPDATE`
+
+Rejected moves should emit a typed `SEND_ERROR` and must not mutate score, turn, or game history.
+
 ## Room Lifecycle
 
 - Rooms are in-memory for this pass.
 - Empty rooms are cleaned up after 3 minutes with no connected players.
 - Rooms are removed when the game expires or ends.
 - Closed/expired/missing rooms return typed server errors over WebSocket or HTTP status errors for history routes.
+
+```mermaid
+stateDiagram-v2
+  [*] --> open: create room
+  open --> active: first player joins
+  active --> active: moves/chat/joins/leaves
+  active --> empty: last player disconnects
+  empty --> active: player rejoins within cleanup window
+  empty --> removed: 3 minutes empty
+  active --> closed: 250 cities or 30 minutes
+  closed --> removed: cleanup
+```
 
 ## Remaining Production Follow-Ups
 
@@ -65,3 +154,4 @@ This document records the backend contract the frontend expects for Atlas multip
 - Decide whether room creation needs a visible frontend selector for `strict-turns` vs `free-for-all`.
 - Decide whether chat/game history should survive process restarts.
 - Add auth/rate limits before exposing rooms publicly.
+- Add a game registry with custom validators, score policies, turn policies, snapshots, and completion rules for future games.

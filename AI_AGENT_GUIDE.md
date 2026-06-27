@@ -1,297 +1,156 @@
 # Atlas Frontend AI Agent Guide
 
-This guide documents the current frontend architecture, structure, style, and safe extension points for AI agents.
+`atlas-mutli-game` is the Next.js/R3F frontend for Atlas. The directory name is spelled `mutli` on disk; keep that spelling in paths and commands.
 
-The project directory is named `atlas-mutli-game` on disk. Treat that spelling as authoritative for paths and commands.
+## Frontend Architecture
 
-## Overview
+```mermaid
+flowchart TD
+  Routes["app/<br/>Next.js routes"]
+  Layout["src/components/dom/Layout.tsx<br/>persistent canvas shell"]
+  UI["src/components/dom<br/>lobby, game HUD, chat"]
+  Canvas["src/components/canvas<br/>globe, arcs, 3D scene"]
+  Hooks["src/hooks<br/>realtime + game hooks"]
+  Store["src/store<br/>Zustand slices"]
+  Client["src/network/atlasClient.ts<br/>WebSocket/protobuf transport"]
+  Protocol["src/protocol<br/>generated + domain types"]
+  Data["src/data/cities.ts<br/>local city lookup"]
 
-`atlas-mutli-game` is a Next.js 13 App Router frontend built from a React Three Fiber starter. It uses:
+  Routes --> Layout
+  Routes --> UI
+  Routes --> Canvas
+  UI --> Hooks
+  UI --> Store
+  Hooks --> Client
+  Hooks --> Store
+  Hooks --> Data
+  Client --> Protocol
+  Client --> Store
+```
 
-- Next.js App Router under `app/`.
-- React 18 client components.
-- React Three Fiber and Drei for persistent canvas rendering.
-- `three-globe` for the globe.
-- Tailwind CSS for styling.
-- Zustand with Immer middleware for local state.
-- Heroicons and React Spring for UI icons/animation.
-- PWA and bundle analyzer wrappers in `next.config.js`.
-
-Current behavior:
-
-- `/` renders a main page overlay on top of a globe.
-- `/game` renders a game overlay on top of the globe with static players, input, chat, and a sample travel arc.
-- `/try` renders shader experiments.
-- Room, player, and chat data are mostly static.
-- Local word submission state is stored in Zustand.
-- A Socket.IO hook exists, but it is not wired into the app and is not compatible with the current Go backend protocol.
+Components should consume hooks and store selectors. Raw sockets, protobuf decoding, and backend event dispatch belong in `src/network` and protocol mapping code.
 
 ## App Structure
 
 ```text
-.
-|-- app/
-|   |-- layout.tsx
-|   |-- page.tsx
-|   |-- game/page.tsx
-|   |-- try/page.tsx
-|   |-- head.tsx
-|   `-- global.css
-|-- src/
-|   |-- components/
-|   |   |-- dom/
-|   |   |   |-- Layout.tsx
-|   |   |   |-- MainPage/
-|   |   |   `-- GamePage/
-|   |   `-- canvas/
-|   |       |-- Scene.tsx
-|   |       |-- View.tsx
-|   |       |-- VGlobe.tsx
-|   |       |-- GlobeTravelArc.tsx
-|   |       |-- Word.tsx
-|   |       `-- try/
-|   |-- helpers/
-|   |-- store/
-|   `-- templates/
-|-- public/
-|-- next.config.js
-|-- tailwind.config.js
-|-- tsconfig.json
-`-- package.json
+app/                         Next.js App Router pages and global CSS
+src/components/dom/          DOM overlays, lobby, game HUD, chat controls
+src/components/canvas/       Persistent R3F scene, globe, arcs, labels
+src/hooks/                   useAtlasRealtime, useAtlasWordGame, UI/game flows
+src/network/                 atlasClient WebSocket/protobuf transport
+src/protocol/generated/      generated TypeScript protobuf files
+src/store/                   Zustand slices for view, room, game, realtime
+src/data/                    city lookup and validation helpers
+public/                      cities.json, icons, models, static assets
 ```
 
-## Route Responsibilities
+## Realtime Flow
 
-`app/layout.tsx`
+```mermaid
+sequenceDiagram
+  participant Page as /game page
+  participant Hook as useAtlasRealtime
+  participant Client as atlasClient
+  participant Store as Zustand store
+  participant BE as Backend
 
-- Defines metadata.
-- Imports global Tailwind CSS.
-- Wraps all pages in `components/dom/Layout`.
-
-`app/page.tsx`
-
-- Client route for the main lobby screen.
-- Dynamically imports R3F components with `ssr: false`.
-- Renders `MainPage` as a DOM overlay and `VGlobe` inside `View`.
-
-`app/game/page.tsx`
-
-- Client route for gameplay.
-- Renders `GamePage` overlay and globe scene.
-- Adds a sample `GlobeTravelArc` and `Word` labels for New York and Sydney.
-
-`app/try/page.tsx`
-
-- Experimental route for shader/canvas work.
-- Keep experiments isolated here unless they become product UI.
-
-## Canvas Architecture
-
-The canvas layer uses the common R3F "persistent canvas with views" pattern:
-
-- `src/components/dom/Layout.tsx` renders a fixed `Scene` once for the app.
-- `src/components/canvas/Scene.tsx` creates the shared `<Canvas>`, renders `r3f.Out`, and preloads assets.
-- `src/helpers/global.ts` creates a `tunnel-rat` tunnel named `r3f`.
-- `src/helpers/Three.tsx` sends page-specific canvas children into the persistent canvas through `r3f.In`.
-- `src/components/canvas/View.tsx` creates a DOM tracking div and a Drei `View` bound to that div.
-
-Use this pattern for new 3D content:
-
-1. Add scene objects under `src/components/canvas`.
-2. Render them inside `View` from the page route.
-3. Use dynamic imports with `ssr: false` for browser-only canvas components.
-4. Put common camera/lights/background in `Common` or a small adjacent helper.
-
-Important canvas notes:
-
-- `VGlobe` uses `three-globe` and external image URLs from `unpkg.com`.
-- `VGlobe` changes camera position through `useThree`.
-- `Word` faces the camera every frame and changes color on hover.
-- `GlobeTravelArc` computes cubic Bezier control points from latitude/longitude.
-
-## DOM Component Structure
-
-`src/components/dom/MainPage`
-
-- `index.tsx` composes the lobby overlay.
-- `Navbar.tsx` renders logo, static nav links, dark toggle, and "Get started".
-- `Rooms.tsx` owns static room data, room filtering, and navigation to `/game`.
-- `Room.tsx` renders a room card, locked-room password input state, and join navigation.
-- `DarkToggle.tsx` toggles global dark mode from Zustand and animates the icon with React Spring.
-
-`src/components/dom/GamePage`
-
-- `index.tsx` composes player list, chat, settings, previous words, and input.
-- `Player.tsx` renders static player avatars and active player highlight.
-- `GameInput.tsx` validates continuation against the last submitted word and updates Zustand.
-- `PrevWords.tsx` displays the last five submitted words.
-- `Chat.tsx` renders static chat messages and hover/input behavior.
-- `SettingsBar.tsx` currently only navigates back to `/`.
-- `GameInfo.tsx` is currently empty.
-
-Overlay convention:
-
-- Pages place DOM overlays above canvas with absolute positioning and `z-index`.
-- Containers often use `pointer-events-none`; interactive children use `pointer-events-auto`.
-- Preserve this pattern when adding controls over the globe.
-
-## State Management
-
-The global store lives in `src/store/store.ts` and composes four slices with Zustand and Immer:
-
-- `ViewSlice`: `darkMode`, `toggleMode`
-- `RoomSlice`: `rooms`, `addRoom`
-- `GameSlice`: `id`, `name`, `players`, `gameMode`, `wordsSubmitted`, and mutators
-- `SocketSlice`: `socket`, `uid`, `users`
-
-Style for store changes:
-
-- Add cohesive state to the relevant slice.
-- If state spans gameplay and networking, prefer a new clearly named slice over overloading `GameSlice`.
-- Keep slice mutators small and explicit.
-- Use Zustand selectors in components to avoid broad rerenders.
-- The project has `strict: false`; still write typed state and component props where practical.
-
-Important current issue:
-
-- `GameInput` calls `setWordValid(wordValidation(userInput))` and then immediately checks `wordValid`, which may still contain the previous React state value. If changing this component, compute validation in local variables inside the Enter handler.
-
-## Networking and Backend Integration
-
-`src/templates/hooks/useSocket.tsx` creates a Socket.IO client. The Go backend uses plain WebSocket with protobuf binary frames.
-
-Do not wire `useSocket` to the Go backend as-is. A correct backend client should:
-
-- Use browser `WebSocket`, not Socket.IO, unless the backend is changed.
-- Open `ws://localhost:8080/{roomId}` after calling `GET /create`.
-- Send and receive binary protobuf messages.
-- Decode `ServerToClientMessage`.
-- Encode `ClientToServerMessage`.
-- Store `roomId`, `playerId`, connection status, players, chat, and game state in Zustand.
-
-Suggested future structure:
-
-```text
-src/
-|-- network/
-|   |-- atlasClient.ts
-|   `-- protobuf/
-|-- store/
-|   `-- NetworkSlice.ts
+  Page->>Hook: roomId + player name gate
+  Hook->>Client: connect(roomId, displayName)
+  Client->>BE: WebSocket + JOIN_ROOM protobuf
+  BE-->>Client: SEND_ON_CONNECT_ACK
+  Client-->>Hook: ack event
+  Hook->>Store: setConnectAck
+  Hook->>Client: fetchChatHistory(roomId)
+  Client-->>Hook: chat page
+  Hook->>Store: setChatHistoryPage
+  BE-->>Client: chat/game/room events
+  Client-->>Hook: typed domain events
+  Hook->>Store: hydrate slices
 ```
 
-If adding generated TypeScript protobuf code, keep it out of DOM and canvas component folders.
+`useAtlasRealtime(roomId, canConnect)` owns the socket lifecycle. Its connection effect should depend only on `roomId` and `canConnect`; normal chat, score, turn, or room updates must not reconnect the socket.
 
-## Styling Conventions
+## Game Page Flow
 
-Styling is Tailwind-first:
+```mermaid
+flowchart LR
+  Input["City input"]
+  Local["Local UX validation<br/>empty, unknown, duplicate, wrong letter, turn gate"]
+  Send["atlasClient.sendGameUpdate"]
+  Backend["Backend authoritative validation"]
+  Events["Accepted events/snapshots"]
+  UI["Globe, last cities, scores, active player"]
 
-- Global utility classes and reusable component classes live in `app/global.css`.
-- Common classes include `standard-color`, `standard-border`, `primary-color`, `secondary-color`, `button`, `input`, and `card`.
-- Dark mode is class-based through Tailwind and `ViewSlice.darkMode`.
-- UI currently uses rounded, playful cards/buttons and bright accent colors.
+  Input --> Local
+  Local -- valid --> Send --> Backend --> Events --> UI
+  Local -- invalid --> Toast["Toast/error, keep focus"]
+  Backend -- rejected --> Error["SEND_ERROR toast + request snapshot if needed"]
+```
 
-When editing UI:
+The frontend never fakes accepted city history. Globe arcs, scores, current letter, and active-player highlight update from backend `BROADCAST_GAME_UPDATE`, `RESPOND_GAME_STATE`, and `BROADCAST_ROOM_UPDATE`.
 
-- Keep DOM overlays readable against the globe.
-- Preserve `pointer-events` intent so canvas orbit controls and UI controls do not fight each other.
-- Prefer existing global classes before inventing one-off utility piles.
-- Keep route-level canvas imports dynamic with `ssr: false`.
+## Persistent Canvas Pattern
 
-## TypeScript and Config Notes
+The app uses a single persistent R3F canvas:
 
-`tsconfig.json`:
+```mermaid
+flowchart TD
+  Layout["Layout.tsx"]
+  Scene["Scene.tsx<br/>shared Canvas"]
+  Tunnel["tunnel-rat r3f"]
+  Three["Three.tsx"]
+  View["View.tsx"]
+  Globe["VGlobe / arcs / labels"]
 
-- `strict` is disabled.
-- `allowJs` is enabled.
-- Path alias maps `@/*` to both `app/*` and `src/*`.
-- Target is `es5`.
+  Layout --> Scene
+  Three --> Tunnel
+  Tunnel --> Scene
+  View --> Globe
+```
 
-`next.config.js`:
+Add reusable 3D pieces under `src/components/canvas`. Keep browser-only canvas imports dynamic with `ssr: false` from route files.
 
-- Wraps config with PWA and bundle analyzer plugins.
-- Ignores TypeScript build errors.
-- Adds loaders for audio and GLSL shader files.
-- Excludes `sharp` from the browser build.
+## State Boundaries
 
-`tailwind.config.js`:
+- `ViewSlice`: theme/view state.
+- `RoomSlice`: lobby room list.
+- `GameSlice`: Atlas game UI state and accepted city history.
+- `RealtimeSlice`: connection state, player id/name, players, chat, snapshots, errors, unread count.
 
-- Scans `app/**/*` and `src/components/**/*`.
-- If you add Tailwind classes under `src/helpers`, `src/store`, or a new `src/network` UI file, update `content`.
+Prefer narrowly selected Zustand state in components to avoid broad rerenders. Keep transport state out of presentational components.
+
+## Styling And UI Conventions
+
+Tailwind is the main styling tool. Reuse global classes from `app/global.css` where possible. Keep HUD elements readable over the globe and preserve `pointer-events-none` on noninteractive overlays with `pointer-events-auto` on controls.
+
+Use existing UI helpers such as `Tooltip.tsx` and `Toaster.tsx`. Game controls should remain compact: chat bottom-right, share bottom-left, turn status above input, and players in side columns.
+
+## Protocol And Generated Code
+
+TypeScript protobufs are generated from backend `.proto` contracts:
+
+```powershell
+pnpm proto:gen
+```
+
+Generated files live under `src/protocol/generated` and should not be manually edited. Domain-facing types belong in `src/protocol/types.ts`.
 
 ## Commands
 
-Install dependencies:
-
-```bash
+```powershell
 pnpm install
-```
-
-Run locally:
-
-```bash
+pnpm proto:gen
 pnpm dev
-```
-
-Build:
-
-```bash
+pnpm typecheck
+pnpm lint
+pnpm format:check
 pnpm build
 ```
 
-Lint:
-
-```bash
-pnpm lint
-pnpm eslint
-```
-
-Notes:
-
-- `pnpm lint` targets `app`.
-- `pnpm eslint` targets `src`.
-- The `prettier` script currently appears to have an extra trailing quote in `package.json`; verify before relying on it.
+Run the Go backend before manual WebSocket verification.
 
 ## Common Change Patterns
 
-Add a new page:
+For new realtime events: update protobufs, regenerate, decode in `atlasClient`, map to domain types, hydrate Zustand in `useAtlasRealtime`, then render through components.
 
-1. Create `app/{route}/page.tsx`.
-2. Use `'use client'` if it needs browser APIs, state, R3F, or navigation hooks.
-3. Dynamically import canvas pieces with `ssr: false`.
-4. Reuse `View` and `Common` for 3D sections.
-
-Add a new game UI control:
-
-1. Place it under `src/components/dom/GamePage`.
-2. Use existing `button` or `input` classes when suitable.
-3. Ensure the parent path allows interaction with `pointer-events-auto`.
-4. Store shared state in Zustand, local-only state in the component.
-
-Add a new globe visual:
-
-1. Place reusable 3D components under `src/components/canvas`.
-2. Use helpers like `latLonToVec3` for coordinate conversion.
-3. Avoid DOM APIs inside components that may render server-side. Prefer client-only dynamic imports.
-
-Integrate backend chat:
-
-1. Add a plain WebSocket/protobuf client.
-2. Call backend `/create` or join with a room id.
-3. Store connect ACK data in Zustand.
-4. Replace static `messages` in `Chat.tsx` with store-backed messages.
-5. Encode `SEND_CHAT_MESSAGE` on submit.
-6. Decode `BROADCAST_CHAT_MESSAGE` and append to chat state.
-
-## Known Gaps
-
-- Frontend is not connected to backend.
-- Socket hook uses Socket.IO while backend is not Socket.IO.
-- Static room, player, and chat data.
-- No TypeScript strictness.
-- `next.config.js` ignores TypeScript build errors.
-- `GameInfo.tsx` is empty.
-- Several components log to console during render or route execution.
-- `GameInput` validation state can be stale on Enter.
-- External globe textures depend on `unpkg.com`.
-
+For new game UI: keep generic realtime plumbing reusable, add a game-specific hook, validate only for UX locally, and wait for backend accepted events before mutating authoritative history.
